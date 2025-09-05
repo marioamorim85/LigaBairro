@@ -1,0 +1,250 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Application {
+  createdAt: DateTime!
+  helper: User
+  helperId: String!
+  id: ID!
+  message: String
+  request: Request
+  requestId: String!
+  status: String!
+}
+
+input ApplyToRequestInput {
+  message: String
+  requestId: String!
+}
+
+input CreateRequestInput {
+  budgetCents: Int
+  category: String!
+  description: String!
+  imageUrls: [String!]! = []
+  isPaid: Boolean! = false
+  lat: Float!
+  lng: Float!
+  scheduledFrom: String
+  scheduledTo: String
+  title: String!
+}
+
+input CreateReviewInput {
+  comment: String
+  rating: Int!
+  requestId: String!
+  revieweeId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type Message {
+  createdAt: DateTime!
+  id: ID!
+  requestId: String!
+  sender: User
+  senderId: String!
+  text: String!
+}
+
+type Mutation {
+  acceptApplication(applicationId: String!): Application!
+  applyToRequest(input: ApplyToRequestInput!): Application!
+  createRequest(input: CreateRequestInput!): Request!
+  createReview(input: CreateReviewInput!): Review!
+  markAllNotificationsAsRead: Boolean!
+  markNotificationAsRead(id: String!): Notification!
+  removeApplication(applicationId: String!): RemoveApplicationResult!
+  reportRequest(input: ReportRequestInput!): Report!
+  reportUser(input: ReportUserInput!): Report!
+  sendMessage(input: SendMessageInput!): Message!
+  updateProfile(input: UpdateUserInput!): User!
+  updateRequest(id: String!, input: UpdateRequestInput!): Request!
+  updateRequestStatus(id: String!, status: String!): Request!
+  updateUserSkills(input: UpdateUserSkillsInput!): User!
+}
+
+type Notification {
+  createdAt: DateTime!
+  data: JSON
+  emailSent: Boolean!
+  id: ID!
+  message: String!
+  read: Boolean!
+  title: String!
+  type: NotificationType!
+  userId: String!
+}
+
+enum NotificationType {
+  APPLICATION_ACCEPTED
+  APPLICATION_REJECTED
+  NEW_APPLICATION
+  NEW_MESSAGE
+  NEW_REVIEW
+  REQUEST_STATUS_CHANGED
+}
+
+type Query {
+  canReview(requestId: String!, revieweeId: String!): Boolean!
+  getUserNotifications(limit: Int! = 50, offset: Int! = 0): [Notification!]!
+  me: User
+  messagesByRequest(requestId: String!): [Message!]!
+  myApplications: [Application!]!
+  reports: [Report!]!
+  request(id: String!): Request
+  searchRequests(input: SearchRequestsInput!): [Request!]!
+  skills: [Skill!]!
+  unreadNotificationsCount: Int!
+  userReviews(limit: Int! = 10, userId: String!): [Review!]!
+  userStats(userId: String!): UserStats!
+}
+
+type RatingDistribution {
+  rating1: Int!
+  rating2: Int!
+  rating3: Int!
+  rating4: Int!
+  rating5: Int!
+}
+
+type RemoveApplicationResult {
+  id: ID!
+  message: String!
+  success: Boolean!
+}
+
+type Report {
+  createdAt: DateTime!
+  details: String
+  id: ID!
+  reason: String!
+  reporterId: String!
+  requestId: String
+  status: String!
+  targetUserId: String
+}
+
+input ReportRequestInput {
+  details: String
+  reason: String!
+  requestId: String!
+}
+
+input ReportUserInput {
+  details: String
+  reason: String!
+  targetUserId: String!
+}
+
+type Request {
+  applications: [Application!]
+  budgetCents: Int
+  category: String!
+  city: String!
+  createdAt: DateTime!
+  description: String!
+  distance: Float
+  id: ID!
+  imageUrls: [String!]!
+  isPaid: Boolean!
+  lat: Float!
+  lng: Float!
+  messages: [Message!]
+  requester: User
+  requesterId: String!
+  scheduledFrom: DateTime
+  scheduledTo: DateTime
+  status: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Review {
+  comment: String
+  createdAt: DateTime!
+  id: ID!
+  rating: Int!
+  requestId: String!
+  revieweeId: String!
+  reviewerId: String!
+}
+
+input SearchRequestsInput {
+  category: String
+  limit: Int! = 10
+  offset: Int! = 0
+  status: String
+}
+
+input SendMessageInput {
+  requestId: String!
+  text: String!
+}
+
+type Skill {
+  id: ID!
+  name: String!
+}
+
+input UpdateRequestInput {
+  budgetCents: Int
+  category: String
+  description: String
+  imageUrls: [String!]
+  isPaid: Boolean
+  scheduledFrom: String
+  scheduledTo: String
+  title: String
+}
+
+input UpdateUserInput {
+  avatarUrl: String
+  bio: String
+  lat: Float
+  lng: Float
+  name: String
+}
+
+input UpdateUserSkillsInput {
+  skillIds: [ID!]!
+}
+
+type User {
+  avatarUrl: String
+  bio: String
+  city: String!
+  createdAt: DateTime!
+  email: String!
+  googleId: String!
+  id: ID!
+  lat: Float
+  lng: Float
+  name: String!
+  ratingAvg: Float
+  role: String!
+  skills: [UserSkill!]
+  updatedAt: DateTime!
+}
+
+type UserSkill {
+  skill: Skill!
+  skillId: String!
+  userId: String!
+}
+
+type UserStats {
+  averageRating: Float!
+  ratingDistribution: RatingDistribution!
+  totalReviews: Int!
+}

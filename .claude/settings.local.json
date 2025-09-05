@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx typescript:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(npm run dev:*)",
+      "Bash(dir)",
+      "Bash(set PORT=3001)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx prisma db seed:*)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(netstat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
