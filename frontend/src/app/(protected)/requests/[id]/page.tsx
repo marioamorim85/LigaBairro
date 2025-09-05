@@ -70,27 +70,39 @@ export default function RequestDetailPage() {
       // Listen for new applications and status changes
       socketService.onNewApplication(() => {
         refetch();
-        // Also invalidate requests list cache
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
+        // Also invalidate requests list cache (safely)
+        try {
+          client.refetchQueries({
+            include: ['SearchRequests']
+          });
+        } catch (error) {
+          console.log('SearchRequests not active, skipping refetch');
+        }
       });
 
       socketService.onRequestStatusChange(() => {
         refetch();
-        // Also invalidate requests list cache
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
+        // Also invalidate requests list cache (safely)
+        try {
+          client.refetchQueries({
+            include: ['SearchRequests']
+          });
+        } catch (error) {
+          console.log('SearchRequests not active, skipping refetch');
+        }
       });
 
       // Listen for application acceptance/rejection
       socketService.onApplicationAccepted(() => {
         refetch();
-        // Also invalidate requests list cache
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
+        // Also invalidate requests list cache (safely)
+        try {
+          client.refetchQueries({
+            include: ['SearchRequests']
+          });
+        } catch (error) {
+          console.log('SearchRequests not active, skipping refetch');
+        }
       });
 
       // Join user room for personalized notifications
@@ -101,10 +113,14 @@ export default function RequestDetailPage() {
         socketService.onApplicationStatus((data) => {
           console.log('📱 Personal application status update:', data);
           refetch();
-          // Also invalidate requests list cache
-          client.refetchQueries({
-            include: ['SearchRequests']
-          });
+          // Also invalidate requests list cache (safely)
+          try {
+            client.refetchQueries({
+              include: ['SearchRequests']
+            });
+          } catch (error) {
+            console.log('SearchRequests not active, skipping refetch');
+          }
           
           // Show toast notification
           if (data.type === 'ACCEPTED') {
@@ -146,9 +162,13 @@ export default function RequestDetailPage() {
       setApplicationMessage('');
       refetch();
       // Invalidate requests list cache to update application counts
-      client.refetchQueries({
-        include: ['SearchRequests']
-      });
+      try {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        });
+      } catch (error) {
+        console.log('SearchRequests not active, skipping refetch');
+      }
     } catch (error: any) {
       console.error('Error applying to request:', error);
       alert(error.message || 'Erro ao candidatar-se');
@@ -164,9 +184,13 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update application counts and statuses
-      client.refetchQueries({
-        include: ['SearchRequests']
-      });
+      try {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        });
+      } catch (error) {
+        console.log('SearchRequests not active, skipping refetch');
+      }
     } catch (error: any) {
       alert(error.message || 'Erro ao aceitar candidatura');
     }
@@ -185,9 +209,13 @@ export default function RequestDetailPage() {
       
       refetch();
       // Invalidate requests list cache to update application counts
-      client.refetchQueries({
-        include: ['SearchRequests']
-      });
+      try {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        });
+      } catch (error) {
+        console.log('SearchRequests not active, skipping refetch');
+      }
     } catch (error: any) {
       console.error('Error removing application:', error);
       alert(error.message || 'Erro ao remover candidatura');
@@ -210,9 +238,13 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update request status
-      client.refetchQueries({
-        include: ['SearchRequests']
-      });
+      try {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        });
+      } catch (error) {
+        console.log('SearchRequests not active, skipping refetch');
+      }
     } catch (error: any) {
       alert(error.message || 'Erro ao encerrar pedido');
     }
@@ -232,9 +264,13 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update request status
-      client.refetchQueries({
-        include: ['SearchRequests']
-      });
+      try {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        });
+      } catch (error) {
+        console.log('SearchRequests not active, skipping refetch');
+      }
     } catch (error: any) {
       alert(error.message || 'Erro ao cancelar pedido');
     }
