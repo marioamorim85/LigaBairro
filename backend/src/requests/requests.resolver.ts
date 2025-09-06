@@ -5,12 +5,14 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { RequestsService } from './requests.service';
 import { Request, CreateRequestInput, UpdateRequestInput, SearchRequestsInput, RequestStatus } from './dto/request.dto';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { DataLoaderService } from '../common/dataloader/dataloader.service';
 
 @Resolver(() => Request)
 export class RequestsResolver {
   constructor(
     private requestsService: RequestsService,
     private prismaService: PrismaService,
+    private dataLoaderService: DataLoaderService,
   ) {}
 
   @Mutation(() => Request)
@@ -52,34 +54,19 @@ export class RequestsResolver {
     return this.requestsService.updateStatus(id, status, user.id);
   }
 
-  // Field resolvers
+  // Optimized field resolvers with DataLoader
   @ResolveField()
   async requester(@Parent() request: Request) {
-    return this.prismaService.user.findUnique({
-      where: { id: request.requesterId },
-    });
+    return this.dataLoaderService.getUserById(request.requesterId);
   }
 
   @ResolveField()
   async applications(@Parent() request: Request) {
-    return this.prismaService.application.findMany({
-      where: { requestId: request.id },
-      include: {
-        helper: true,
-      },
-    });
+    return this.dataLoaderService.getApplicationsByRequestId(request.id);
   }
 
   @ResolveField()
   async messages(@Parent() request: Request) {
-    return this.prismaService.message.findMany({
-      where: { requestId: request.id },
-      include: {
-        sender: true,
-      },
-      orderBy: {
-        createdAt: 'asc',
-      },
-    });
+    return this.dataLoaderService.getMessagesByRequestId(request.id);
   }
 }

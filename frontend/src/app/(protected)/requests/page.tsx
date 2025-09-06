@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
 import { RatingDisplay } from '@/components/rating-stars';
+import { RequestCardSkeleton } from '@/components/ui/skeleton';
 import { Plus, MapPin, Clock, Euro, Search } from 'lucide-react';
 
 const categories = ['Todos', 'Compras', 'Reparações', 'Companhia a idosos', 'Limpezas', 'Jardinagem'];
@@ -189,18 +190,7 @@ export default function RequestsPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="h-3 bg-gray-200 rounded"></div>
-                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-                </div>
-              </CardContent>
-            </Card>
+            <RequestCardSkeleton key={i} />
           ))}
         </div>
       ) : error ? (

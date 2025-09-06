@@ -6,7 +6,6 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -40,8 +39,7 @@ async function bootstrap() {
   
   // Global filters - removed HttpExceptionFilter to avoid GraphQL conflicts
   
-  // Global interceptors
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  // Global interceptors are configured via APP_INTERCEPTOR in app.module.ts
   
   // CORS
   app.enableCors({

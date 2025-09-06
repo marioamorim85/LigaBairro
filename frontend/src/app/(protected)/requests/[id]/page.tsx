@@ -71,38 +71,32 @@ export default function RequestDetailPage() {
       socketService.onNewApplication(() => {
         refetch();
         // Also invalidate requests list cache (safely)
-        try {
-          client.refetchQueries({
-            include: ['SearchRequests']
-          });
-        } catch (error) {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        }).catch(() => {
           // SearchRequests not active, skipping refetch (normal)
-        }
+        });
       });
 
       socketService.onRequestStatusChange(() => {
         refetch();
         // Also invalidate requests list cache (safely)
-        try {
-          client.refetchQueries({
-            include: ['SearchRequests']
-          });
-        } catch (error) {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        }).catch(() => {
           // SearchRequests not active, skipping refetch (normal)
-        }
+        });
       });
 
       // Listen for application acceptance/rejection
       socketService.onApplicationAccepted(() => {
         refetch();
         // Also invalidate requests list cache (safely)
-        try {
-          client.refetchQueries({
-            include: ['SearchRequests']
-          });
-        } catch (error) {
+        client.refetchQueries({
+          include: ['SearchRequests']
+        }).catch(() => {
           // SearchRequests not active, skipping refetch (normal)
-        }
+        });
       });
 
       // Join user room for personalized notifications
@@ -114,13 +108,11 @@ export default function RequestDetailPage() {
           console.log('📱 Personal application status update:', data);
           refetch();
           // Also invalidate requests list cache (safely)
-          try {
-            client.refetchQueries({
-              include: ['SearchRequests']
-            });
-          } catch (error) {
+          client.refetchQueries({
+            include: ['SearchRequests']
+          }).catch(() => {
             console.log('SearchRequests not active, skipping refetch');
-          }
+          });
           
           // Show toast notification
           if (data.type === 'ACCEPTED') {
@@ -162,13 +154,11 @@ export default function RequestDetailPage() {
       setApplicationMessage('');
       refetch();
       // Invalidate requests list cache to update application counts
-      try {
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
-      } catch (error) {
+      client.refetchQueries({
+        include: ['SearchRequests']
+      }).catch(() => {
         console.log('SearchRequests not active, skipping refetch');
-      }
+      });
     } catch (error: any) {
       console.error('Error applying to request:', error);
       alert(error.message || 'Erro ao candidatar-se');
@@ -184,13 +174,11 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update application counts and statuses
-      try {
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
-      } catch (error) {
+      client.refetchQueries({
+        include: ['SearchRequests']
+      }).catch(() => {
         console.log('SearchRequests not active, skipping refetch');
-      }
+      });
     } catch (error: any) {
       alert(error.message || 'Erro ao aceitar candidatura');
     }
@@ -209,13 +197,11 @@ export default function RequestDetailPage() {
       
       refetch();
       // Invalidate requests list cache to update application counts
-      try {
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
-      } catch (error) {
+      client.refetchQueries({
+        include: ['SearchRequests']
+      }).catch(() => {
         console.log('SearchRequests not active, skipping refetch');
-      }
+      });
     } catch (error: any) {
       console.error('Error removing application:', error);
       alert(error.message || 'Erro ao remover candidatura');
@@ -238,13 +224,11 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update request status
-      try {
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
-      } catch (error) {
+      client.refetchQueries({
+        include: ['SearchRequests']
+      }).catch(() => {
         console.log('SearchRequests not active, skipping refetch');
-      }
+      });
     } catch (error: any) {
       alert(error.message || 'Erro ao encerrar pedido');
     }
@@ -264,13 +248,11 @@ export default function RequestDetailPage() {
       });
       refetch();
       // Invalidate requests list cache to update request status
-      try {
-        client.refetchQueries({
-          include: ['SearchRequests']
-        });
-      } catch (error) {
+      client.refetchQueries({
+        include: ['SearchRequests']
+      }).catch(() => {
         console.log('SearchRequests not active, skipping refetch');
-      }
+      });
     } catch (error: any) {
       alert(error.message || 'Erro ao cancelar pedido');
     }
