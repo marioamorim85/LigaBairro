@@ -4,12 +4,14 @@ import { ApplicationsResolver } from './applications.resolver';
 import { RequestsModule } from '../requests/requests.module';
 import { MessagesModule } from '../messages/messages.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { DataLoaderModule } from '../common/dataloader/dataloader.module';
 
 @Module({
   imports: [
     RequestsModule, 
     forwardRef(() => MessagesModule),
     NotificationsModule,
+    DataLoaderModule,
   ],
   providers: [ApplicationsService, ApplicationsResolver],
   exports: [ApplicationsService],

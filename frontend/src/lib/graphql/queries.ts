@@ -155,3 +155,43 @@ export const GET_MY_APPLICATIONS = gql`
     }
   }
 `;
+
+export const CAN_REVIEW = gql`
+  query CanReview($requestId: String!, $revieweeId: String!) {
+    canReview(requestId: $requestId, revieweeId: $revieweeId)
+  }
+`;
+
+export const GET_MY_REVIEW = gql`
+  query GetMyReview($requestId: String!, $revieweeId: String!) {
+    myReview(requestId: $requestId, revieweeId: $revieweeId) {
+      id
+      rating
+      comment
+      createdAt
+    }
+  }
+`;
+
+export const GET_REQUEST_REVIEWS = gql`
+  query GetRequestReviews($requestId: String!) {
+    requestReviews(requestId: $requestId) {
+      id
+      reviewerId
+      revieweeId
+      rating
+      comment
+      createdAt
+      reviewer {
+        id
+        name
+        avatarUrl
+      }
+      reviewee {
+        id
+        name
+        avatarUrl
+      }
+    }
+  }
+`;

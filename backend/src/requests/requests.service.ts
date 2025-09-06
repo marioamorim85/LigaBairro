@@ -114,7 +114,9 @@ export class RequestsService {
   }
 
   async findById(id: string) {
-    return this.prisma.request.findUnique({
+    console.log('🔍 Finding request by ID:', id);
+    
+    const result = await this.prisma.request.findUnique({
       where: { id },
       include: {
         requester: {
@@ -156,6 +158,18 @@ export class RequestsService {
         },
       },
     });
+    
+    console.log('🔍 Request found:', !!result);
+    if (result) {
+      console.log('🔍 Applications count:', result.applications?.length || 0);
+      console.log('🔍 Applications details:', result.applications?.map(app => ({
+        id: app.id,
+        helperId: app.helperId,
+        status: app.status
+      })) || []);
+    }
+    
+    return result;
   }
 
   async update(id: string, input: UpdateRequestInput, userId: string) {

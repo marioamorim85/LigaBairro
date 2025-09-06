@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { MessagesGateway } from '../messages/messages.gateway';
+import { DataLoaderService } from '../common/dataloader/dataloader.service';
 import { ApplyToRequestInput } from './dto/application.dto';
 
 @Injectable()
@@ -10,36 +11,25 @@ export class ApplicationsService {
     private prisma: PrismaService,
     private notificationsService: NotificationsService,
     private messagesGateway: MessagesGateway,
+    private dataLoaderService: DataLoaderService,
   ) {}
 
   async apply(userId: string, input: ApplyToRequestInput) {
-    console.log('=== APPLICATIONS SERVICE APPLY ===');
-    console.log('User ID:', userId);
-    console.log('Input:', JSON.stringify(input, null, 2));
-    
     try {
       // Check if request exists and is open
       const request = await this.prisma.request.findUnique({
         where: { id: input.requestId },
       });
       
-      console.log('Request found:', request ? 'YES' : 'NO');
-      console.log('Request details:', request);
-
       if (!request) {
-        console.log('Throwing: Pedido não encontrado');
         throw new BadRequestException('Pedido não encontrado');
       }
 
       if (request.status !== 'OPEN') {
-        console.log('Throwing: Pedido já não está disponível - Status:', request.status);
         throw new BadRequestException('Pedido já não está disponível');
       }
 
       if (request.requesterId === userId) {
-        console.log('Throwing: Não pode candidatar-se ao próprio pedido');
-        console.log('Request owner ID:', request.requesterId);
-        console.log('Applicant ID:', userId);
         throw new BadRequestException('Não pode candidatar-se ao próprio pedido');
       }
 
@@ -51,14 +41,9 @@ export class ApplicationsService {
         },
       });
       
-      console.log('Existing application:', existingApplication ? 'YES' : 'NO');
-
       if (existingApplication) {
-        console.log('Throwing: Já se candidatou a este pedido');
         throw new BadRequestException('Já se candidatou a este pedido');
       }
-
-      console.log('Creating new application...');
       const application = await this.prisma.application.create({
         data: {
           requestId: input.requestId,
@@ -89,7 +74,9 @@ export class ApplicationsService {
         },
       });
       
-      console.log('Application created successfully:', application);
+      // Clear DataLoader cache to ensure GraphQL returns fresh data
+      this.dataLoaderService.clearApplicationCache(input.requestId);
+      this.dataLoaderService.clearRequestCache(input.requestId);
       
       // Get existing applicants to notify them of the new application
       const existingApplications = await this.prisma.application.findMany({
@@ -126,7 +113,6 @@ export class ApplicationsService {
       
       return application;
     } catch (error) {
-      console.error('Error in applications service:', error);
       throw error;
     }
   }
@@ -161,6 +147,10 @@ export class ApplicationsService {
         },
       },
     });
+
+    // Clear DataLoader cache before transaction to ensure fresh data
+    this.dataLoaderService.clearApplicationCache(application.requestId);
+    this.dataLoaderService.clearRequestCache(application.requestId);
 
     // Accept this application and reject others
     await this.prisma.$transaction([
@@ -310,10 +300,6 @@ export class ApplicationsService {
   }
 
   async removeApplication(applicationId: string, userId: string) {
-    console.log('=== REMOVE APPLICATION SERVICE ===');
-    console.log('Application ID:', applicationId);
-    console.log('User ID:', userId);
-    
     try {
       // Check if application exists and belongs to user
       const application = await this.prisma.application.findUnique({
@@ -329,33 +315,23 @@ export class ApplicationsService {
         },
       });
 
-      console.log('Application found:', application ? 'YES' : 'NO');
-
       if (!application) {
-        console.log('Throwing: Candidatura não encontrada');
         throw new BadRequestException('Candidatura não encontrada');
       }
 
       if (application.helperId !== userId) {
-        console.log('Throwing: Apenas o candidato pode remover a própria candidatura');
-        console.log('Application helper ID:', application.helperId);
-        console.log('Current user ID:', userId);
         throw new BadRequestException('Apenas o candidato pode remover a própria candidatura');
       }
 
       // Only allow removal if application is still APPLIED (not accepted/rejected)
       if (application.status !== 'APPLIED') {
-        console.log('Throwing: Não pode remover candidatura com status:', application.status);
         throw new BadRequestException('Não é possível remover uma candidatura que já foi processada');
       }
 
       // Only allow removal if request is still OPEN
       if (application.request.status !== 'OPEN') {
-        console.log('Throwing: Pedido já não está aberto - Status:', application.request.status);
         throw new BadRequestException('Não é possível remover candidatura de um pedido que já não está aberto');
       }
-
-      console.log('Removing application...');
       await this.prisma.application.delete({
         where: { id: applicationId },
       });
@@ -382,14 +358,16 @@ export class ApplicationsService {
         );
       }
       
-      console.log('Application removed successfully');
+      // Clear DataLoader cache to ensure GraphQL returns fresh data
+      this.dataLoaderService.clearApplicationCache(application.request.id);
+      this.dataLoaderService.clearRequestCache(application.request.id);
+      
       return {
         id: applicationId,
         success: true,
         message: 'Candidatura removida com sucesso',
       };
     } catch (error) {
-      console.error('Error in remove application service:', error);
       throw error;
     }
   }

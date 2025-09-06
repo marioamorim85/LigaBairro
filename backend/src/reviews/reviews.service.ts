@@ -173,6 +173,55 @@ export class ReviewsService {
     return !existingReview;
   }
 
+  async getMyReview(reviewerId: string, requestId: string, revieweeId: string) {
+    return this.prisma.review.findFirst({
+      where: {
+        requestId,
+        reviewerId,
+        revieweeId,
+      },
+      include: {
+        reviewer: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        reviewee: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getRequestReviews(requestId: string) {
+    return this.prisma.review.findMany({
+      where: { requestId },
+      include: {
+        reviewer: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        reviewee: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   private async updateUserRating(userId: string) {
     const avgResult = await this.prisma.review.aggregate({
       where: { revieweeId: userId },

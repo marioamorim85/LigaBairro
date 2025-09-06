@@ -139,9 +139,17 @@ export const UPDATE_REQUEST = gql`
   }
 `;
 
-export const REVIEW = gql`
-  mutation Review($requestId: ID!, $revieweeId: ID!, $rating: Int!, $comment: String) {
-    review(requestId: $requestId, revieweeId: $revieweeId, rating: $rating, comment: $comment)
+export const CREATE_REVIEW = gql`
+  mutation CreateReview($input: CreateReviewInput!) {
+    createReview(input: $input) {
+      id
+      requestId
+      reviewerId
+      revieweeId
+      rating
+      comment
+      createdAt
+    }
   }
 `;
 

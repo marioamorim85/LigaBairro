@@ -48,4 +48,19 @@ export class ReviewsResolver {
   ) {
     return this.reviewsService.canReview(user.id, requestId, revieweeId);
   }
+
+  @Query(() => Review, { nullable: true })
+  @UseGuards(GqlAuthGuard)
+  myReview(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+    @Args('revieweeId') revieweeId: string,
+  ) {
+    return this.reviewsService.getMyReview(user.id, requestId, revieweeId);
+  }
+
+  @Query(() => [Review])
+  requestReviews(@Args('requestId') requestId: string) {
+    return this.reviewsService.getRequestReviews(requestId);
+  }
 }

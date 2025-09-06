@@ -13,22 +13,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { RatingStars } from '@/components/rating-stars';
-import { gql } from '@apollo/client';
 import { useToast } from '@/components/ui/use-toast';
-
-const CREATE_REVIEW = gql`
-  mutation CreateReview($input: CreateReviewInput!) {
-    createReview(input: $input) {
-      id
-      rating
-      comment
-      reviewedUser {
-        id
-        name
-      }
-    }
-  }
-`;
+import { CREATE_REVIEW } from '@/lib/graphql/mutations';
 
 interface ReviewDialogProps {
   isOpen: boolean;
@@ -103,7 +89,7 @@ export function ReviewDialog({
         variables: {
           input: {
             requestId,
-            reviewedUserId,
+            revieweeId: reviewedUserId,
             rating,
             comment: comment.trim()
           }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { useParams } from 'next/navigation';
-import { GET_REQUEST, GET_MESSAGES_BY_REQUEST } from '@/lib/graphql/queries';
+import { GET_REQUEST, GET_MESSAGES_BY_REQUEST, CAN_REVIEW, GET_MY_REVIEW, GET_REQUEST_REVIEWS } from '@/lib/graphql/queries';
 import { APPLY_TO_REQUEST, ACCEPT_APPLICATION, REMOVE_APPLICATION, SEND_MESSAGE, UPDATE_REQUEST_STATUS } from '@/lib/graphql/mutations';
 import { useAuth } from '@/components/auth/auth-provider';
 import { socketService } from '@/lib/socket';
@@ -18,6 +18,8 @@ import { ChatBox } from '@/components/chat-box';
 import { ProxiedImage } from '@/components/proxied-image';
 import { RatingDisplay } from '@/components/rating-stars';
 import { ReviewDialog } from '@/components/review-dialog';
+import { CompletedReview } from '@/components/completed-review';
+import { PublicReviews } from '@/components/public-reviews';
 import { 
   MapPin, 
   Clock, 
@@ -50,16 +52,75 @@ export default function RequestDetailPage() {
   const { data, loading, error, refetch } = useQuery(GET_REQUEST, {
     variables: { id: requestId },
     skip: !requestId,
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only', // Always fetch from network, ignore cache
     notifyOnNetworkStatusChange: true,
+    errorPolicy: 'all',
   });
 
-  const [applyToRequest] = useMutation(APPLY_TO_REQUEST);
+
+  const [applyToRequest] = useMutation(APPLY_TO_REQUEST, {
+    refetchQueries: [
+      { query: GET_REQUEST, variables: { id: requestId } }
+    ],
+    awaitRefetchQueries: true,
+  });
   const [acceptApplication] = useMutation(ACCEPT_APPLICATION);
-  const [removeApplication] = useMutation(REMOVE_APPLICATION);
+  const [removeApplication] = useMutation(REMOVE_APPLICATION, {
+    refetchQueries: [
+      { query: GET_REQUEST, variables: { id: requestId } }
+    ],
+    awaitRefetchQueries: true,
+  });
   const [updateRequestStatus] = useMutation(UPDATE_REQUEST_STATUS);
 
   const request = data?.request;
+  
+  // Check if current user can review each participant
+  const { data: canReviewHelperData } = useQuery(CAN_REVIEW, {
+    variables: { 
+      requestId: requestId, 
+      revieweeId: request?.applications?.find(app => app.status === 'ACCEPTED')?.helper.id || '' 
+    },
+    skip: !requestId || !request?.applications?.find(app => app.status === 'ACCEPTED') || request?.status !== 'DONE',
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const { data: canReviewRequesterData } = useQuery(CAN_REVIEW, {
+    variables: { 
+      requestId: requestId, 
+      revieweeId: request?.requester?.id || '' 
+    },
+    skip: !requestId || !request?.requester?.id || request?.status !== 'DONE',
+    fetchPolicy: 'cache-and-network',
+  });
+
+  // Get my review of the helper
+  const { data: myReviewOfHelperData } = useQuery(GET_MY_REVIEW, {
+    variables: { 
+      requestId: requestId, 
+      revieweeId: request?.applications?.find(app => app.status === 'ACCEPTED')?.helper.id || '' 
+    },
+    skip: !requestId || !request?.applications?.find(app => app.status === 'ACCEPTED') || request?.status !== 'DONE' || canReviewHelperData?.canReview !== false,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  // Get my review of the requester
+  const { data: myReviewOfRequesterData } = useQuery(GET_MY_REVIEW, {
+    variables: { 
+      requestId: requestId, 
+      revieweeId: request?.requester?.id || '' 
+    },
+    skip: !requestId || !request?.requester?.id || request?.status !== 'DONE' || canReviewRequesterData?.canReview !== false,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  // Get all reviews for this request (public)
+  const { data: requestReviewsData } = useQuery(GET_REQUEST_REVIEWS, {
+    variables: { requestId: requestId },
+    skip: !requestId || request?.status !== 'DONE',
+    fetchPolicy: 'cache-and-network',
+  });
+
   
   useEffect(() => {
     if (requestId) {
@@ -70,33 +131,15 @@ export default function RequestDetailPage() {
       // Listen for new applications and status changes
       socketService.onNewApplication(() => {
         refetch();
-        // Also invalidate requests list cache (safely)
-        client.refetchQueries({
-          include: ['SearchRequests']
-        }).catch(() => {
-          // SearchRequests not active, skipping refetch (normal)
-        });
       });
 
       socketService.onRequestStatusChange(() => {
         refetch();
-        // Also invalidate requests list cache (safely)
-        client.refetchQueries({
-          include: ['SearchRequests']
-        }).catch(() => {
-          // SearchRequests not active, skipping refetch (normal)
-        });
       });
 
       // Listen for application acceptance/rejection
       socketService.onApplicationAccepted(() => {
         refetch();
-        // Also invalidate requests list cache (safely)
-        client.refetchQueries({
-          include: ['SearchRequests']
-        }).catch(() => {
-          // SearchRequests not active, skipping refetch (normal)
-        });
       });
 
       // Join user room for personalized notifications
@@ -105,14 +148,7 @@ export default function RequestDetailPage() {
         
         // Listen for personalized application status updates
         socketService.onApplicationStatus((data) => {
-          console.log('📱 Personal application status update:', data);
           refetch();
-          // Also invalidate requests list cache (safely)
-          client.refetchQueries({
-            include: ['SearchRequests']
-          }).catch(() => {
-            console.log('SearchRequests not active, skipping refetch');
-          });
           
           // Show toast notification
           if (data.type === 'ACCEPTED') {
@@ -139,10 +175,9 @@ export default function RequestDetailPage() {
   const handleApply = async () => {
     if (!request || !user) return;
     
-    
     setIsApplying(true);
     try {
-      const result = await applyToRequest({
+      await applyToRequest({
         variables: {
           input: {
             requestId: request.id,
@@ -152,13 +187,6 @@ export default function RequestDetailPage() {
       });
       
       setApplicationMessage('');
-      refetch();
-      // Invalidate requests list cache to update application counts
-      client.refetchQueries({
-        include: ['SearchRequests']
-      }).catch(() => {
-        console.log('SearchRequests not active, skipping refetch');
-      });
     } catch (error: any) {
       console.error('Error applying to request:', error);
       alert(error.message || 'Erro ao candidatar-se');
@@ -173,12 +201,6 @@ export default function RequestDetailPage() {
         variables: { applicationId },
       });
       refetch();
-      // Invalidate requests list cache to update application counts and statuses
-      client.refetchQueries({
-        include: ['SearchRequests']
-      }).catch(() => {
-        console.log('SearchRequests not active, skipping refetch');
-      });
     } catch (error: any) {
       alert(error.message || 'Erro ao aceitar candidatura');
     }
@@ -191,16 +213,8 @@ export default function RequestDetailPage() {
     
     setIsRemoving(true);
     try {
-      const result = await removeApplication({
+      await removeApplication({
         variables: { applicationId },
-      });
-      
-      refetch();
-      // Invalidate requests list cache to update application counts
-      client.refetchQueries({
-        include: ['SearchRequests']
-      }).catch(() => {
-        console.log('SearchRequests not active, skipping refetch');
       });
     } catch (error: any) {
       console.error('Error removing application:', error);
@@ -223,12 +237,6 @@ export default function RequestDetailPage() {
         },
       });
       refetch();
-      // Invalidate requests list cache to update request status
-      client.refetchQueries({
-        include: ['SearchRequests']
-      }).catch(() => {
-        console.log('SearchRequests not active, skipping refetch');
-      });
     } catch (error: any) {
       alert(error.message || 'Erro ao encerrar pedido');
     }
@@ -247,12 +255,6 @@ export default function RequestDetailPage() {
         },
       });
       refetch();
-      // Invalidate requests list cache to update request status
-      client.refetchQueries({
-        include: ['SearchRequests']
-      }).catch(() => {
-        console.log('SearchRequests not active, skipping refetch');
-      });
     } catch (error: any) {
       alert(error.message || 'Erro ao cancelar pedido');
     }
@@ -303,8 +305,13 @@ export default function RequestDetailPage() {
   const hasApplied = !!userApplication;
   const acceptedApplication = request.applications?.find((app: any) => app.status === 'ACCEPTED');
   const isAcceptedHelper = acceptedApplication?.helper.id === user?.id;
+  
   const canChat = isOwner || isAcceptedHelper || hasApplied || request.status === 'OPEN';
   const canRemoveApplication = userApplication && userApplication.status === 'APPLIED' && request.status === 'OPEN';
+  
+  // Check if user can still review
+  const canReviewHelper = canReviewHelperData?.canReview;
+  const canReviewRequester = canReviewRequesterData?.canReview;
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -684,26 +691,84 @@ export default function RequestDetailPage() {
                       )}
                     </div>
                   </div>
-                  
-                  {/* Review Button - Show after request is completed */}
-                  {request.status === 'COMPLETED' && (
-                    <Button
-                      onClick={() => {
-                        setReviewTarget({
-                          id: acceptedApplication.helper.id,
-                          name: acceptedApplication.helper.name
-                        });
-                        setShowReviewDialog(true);
-                      }}
-                      variant="outline"
-                      size="sm"
-                      className="w-full border-yellow-300 text-yellow-700 hover:bg-yellow-50"
-                    >
-                      <Star className="w-4 h-4 mr-2" />
-                      Avaliar Ajudante
-                    </Button>
-                  )}
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Public Reviews Section - Show to everyone after request is completed */}
+          {request.status === 'DONE' && acceptedApplication && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Star className="w-5 h-5 mr-2" />
+                  Avaliações
+                </CardTitle>
+                <CardDescription>
+                  Experiência de colaboração
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Show public reviews to everyone */}
+                <PublicReviews 
+                  reviews={requestReviewsData?.requestReviews || []}
+                  requesterId={request.requester.id}
+                  helperId={acceptedApplication.helper.id}
+                />
+
+                {/* Action buttons - only for participants with available actions */}
+                {((isOwner && canReviewHelper) || (isAcceptedHelper && canReviewRequester) || ((isOwner && canReviewHelper === false) && (isAcceptedHelper && canReviewRequester === false))) && (
+                  <div className="space-y-3 mt-6 pt-4 border-t">
+                    <h4 className="font-medium text-gray-700">Ações dos Participantes</h4>
+                    
+                    {/* Owner can review the helper */}
+                    {isOwner && canReviewHelper && (
+                      <Button
+                        onClick={() => {
+                          setReviewTarget({
+                            id: acceptedApplication.helper.id,
+                            name: acceptedApplication.helper.name
+                          });
+                          setShowReviewDialog(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Avaliar {acceptedApplication.helper.name}
+                      </Button>
+                    )}
+
+                    {/* Helper can review the requester */}
+                    {isAcceptedHelper && canReviewRequester && (
+                      <Button
+                        onClick={() => {
+                          setReviewTarget({
+                            id: request.requester.id,
+                            name: request.requester.name
+                          });
+                          setShowReviewDialog(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-blue-300 text-blue-700 hover:bg-blue-50"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        Avaliar {request.requester.name}
+                      </Button>
+                    )}
+
+                    {/* Show completion message only to participants */}
+                    {(isOwner && canReviewHelper === false) && (isAcceptedHelper && canReviewRequester === false) && (
+                      <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                        <p className="text-sm text-green-700">
+                          ✓ Já fizeste a tua avaliação
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -745,6 +810,17 @@ export default function RequestDetailPage() {
           reviewedUserName={reviewTarget.name}
           onReviewCreated={() => {
             refetch();
+            // Refetch the canReview queries to update button visibility
+            if (isOwner && acceptedApplication) {
+              canReviewHelperData && client.refetchQueries({
+                include: ['CanReview']
+              });
+            }
+            if (isAcceptedHelper) {
+              canReviewRequesterData && client.refetchQueries({
+                include: ['CanReview']
+              });
+            }
           }}
         />
       )}

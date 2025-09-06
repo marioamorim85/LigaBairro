@@ -1,5 +1,6 @@
 import { Field, InputType, ObjectType, ID, Int, Float } from '@nestjs/graphql';
 import { IsString, MinLength, MaxLength, IsInt, Min, Max, IsOptional } from 'class-validator';
+import { User } from '../../users/dto/user.dto';
 
 @InputType()
 export class CreateReviewInput {
@@ -48,9 +49,13 @@ export class Review {
   @Field()
   createdAt: Date;
 
-  // Relations
+  // Relations - These are resolved by Prisma includes
+  @Field(() => User, { nullable: true })
   reviewer?: any;
+  
+  @Field(() => User, { nullable: true })
   reviewee?: any;
+  
   request?: any;
 }
 

@@ -14,7 +14,11 @@
       "Bash(npm install:*)",
       "Bash(npm audit:*)",
       "Bash(/bashes)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx prisma studio:*)"
     ],
     "deny": [],
     "ask": []

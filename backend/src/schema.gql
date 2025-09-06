@@ -101,8 +101,10 @@ type Query {
   me: User
   messagesByRequest(requestId: String!): [Message!]!
   myApplications: [Application!]!
+  myReview(requestId: String!, revieweeId: String!): Review
   reports: [Report!]!
   request(id: String!): Request
+  requestReviews(requestId: String!): [Review!]!
   searchRequests(input: SearchRequestsInput!): [Request!]!
   skills: [Skill!]!
   unreadNotificationsCount: Int!
@@ -176,7 +178,9 @@ type Review {
   id: ID!
   rating: Int!
   requestId: String!
+  reviewee: User
   revieweeId: String!
+  reviewer: User
   reviewerId: String!
 }
 
