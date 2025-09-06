@@ -1,6 +1,7 @@
 'use client';
 
 import { RatingStars } from '@/components/rating-stars';
+import { formatDatePT } from '@/lib/utils';
 
 interface CompletedReviewProps {
   userName: string;
@@ -15,14 +16,6 @@ export function CompletedReview({
   comment,
   createdAt
 }: CompletedReviewProps) {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('pt-PT', {
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   return (
     <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
@@ -31,7 +24,7 @@ export function CompletedReview({
           ✓ Avaliação de {userName}
         </h4>
         <span className="text-xs text-green-600">
-          {formatDate(createdAt)}
+          {formatDatePT(createdAt, { short: true, includeTime: true })}
         </span>
       </div>
       

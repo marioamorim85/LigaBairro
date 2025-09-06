@@ -15,6 +15,7 @@ import {
 import { RatingStars } from '@/components/rating-stars';
 import { useToast } from '@/components/ui/use-toast';
 import { CREATE_REVIEW } from '@/lib/graphql/mutations';
+import { CAN_REVIEW, GET_MY_REVIEW, GET_REQUEST_REVIEWS, GET_REQUEST } from '@/lib/graphql/queries';
 
 interface ReviewDialogProps {
   isOpen: boolean;
@@ -39,6 +40,13 @@ export function ReviewDialog({
   const { toast } = useToast();
 
   const [createReview] = useMutation(CREATE_REVIEW, {
+    refetchQueries: [
+      { query: GET_REQUEST, variables: { id: requestId } },
+      { query: CAN_REVIEW, variables: { requestId, revieweeId: reviewedUserId } },
+      { query: GET_MY_REVIEW, variables: { requestId, revieweeId: reviewedUserId } },
+      { query: GET_REQUEST_REVIEWS, variables: { requestId } }
+    ],
+    awaitRefetchQueries: true,
     onCompleted: () => {
       toast({
         title: 'Sucesso',
@@ -78,6 +86,15 @@ export function ReviewDialog({
         variant: 'destructive',
         title: 'Erro',
         description: 'Por favor, escreve um comentário',
+      });
+      return;
+    }
+
+    if (comment.trim().length < 5) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Comentário deve ter pelo menos 5 caracteres',
       });
       return;
     }
@@ -134,10 +151,10 @@ export function ReviewDialog({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="min-h-[100px]"
-              maxLength={500}
+              maxLength={300}
             />
             <p className="text-xs text-gray-500 mt-1">
-              {comment.length}/500 caracteres
+              {comment.length}/300 caracteres (mínimo 5)
             </p>
           </div>
         </div>

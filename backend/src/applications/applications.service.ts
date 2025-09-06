@@ -111,6 +111,13 @@ export class ApplicationsService {
           : Promise.resolve(),
       ]);
       
+      // Emit WebSocket event to update the request page in real-time
+      this.messagesGateway.emitNewApplication(request.id, {
+        type: 'new',
+        application: application,
+        message: 'Nova candidatura recebida'
+      });
+      
       return application;
     } catch (error) {
       throw error;
@@ -361,6 +368,13 @@ export class ApplicationsService {
       // Clear DataLoader cache to ensure GraphQL returns fresh data
       this.dataLoaderService.clearApplicationCache(application.request.id);
       this.dataLoaderService.clearRequestCache(application.request.id);
+      
+      // Emit WebSocket event to update the request page in real-time
+      this.messagesGateway.emitNewApplication(application.request.id, {
+        type: 'removed',
+        applicationId: applicationId,
+        message: 'Candidatura removida'
+      });
       
       return {
         id: applicationId,

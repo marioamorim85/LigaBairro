@@ -2,6 +2,7 @@
 
 import { RatingStars } from '@/components/rating-stars';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
+import { formatDatePT } from '@/lib/utils';
 
 interface Review {
   id: string;
@@ -31,14 +32,6 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
     return null;
   }
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('pt-PT', {
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   // Separar as reviews
   const requesterReview = reviews.find(review => review.reviewerId === requesterId);
@@ -66,7 +59,7 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
                     {requesterReview.reviewer.name} avaliou {requesterReview.reviewee.name}
                   </p>
                   <p className="text-xs text-blue-600">
-                    {formatDate(requesterReview.createdAt)}
+                    {formatDatePT(requesterReview.createdAt, { short: true, includeTime: true })}
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -103,7 +96,7 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
                     {helperReview.reviewer.name} avaliou {helperReview.reviewee.name}
                   </p>
                   <p className="text-xs text-green-600">
-                    {formatDate(helperReview.createdAt)}
+                    {formatDatePT(helperReview.createdAt, { short: true, includeTime: true })}
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">

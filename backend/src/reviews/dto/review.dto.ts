@@ -21,7 +21,7 @@ export class CreateReviewInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsString({ message: 'Comentário deve ser uma string' })
-  @MinLength(10, { message: 'Comentário deve ter pelo menos 10 caracteres' })
+  @MinLength(5, { message: 'Comentário deve ter pelo menos 5 caracteres' })
   @MaxLength(300, { message: 'Comentário deve ter no máximo 300 caracteres' })
   comment?: string;
 }
