@@ -66,10 +66,8 @@ export class RequestsService {
 
     if (input.status) {
       where.status = input.status;
-    } else {
-      // Default to only open requests
-      where.status = RequestStatus.OPEN;
     }
+    // If status is null, don't filter by status (show all)
 
     const requests = await this.prisma.request.findMany({
       where,

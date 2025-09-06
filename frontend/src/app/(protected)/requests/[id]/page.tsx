@@ -76,7 +76,7 @@ export default function RequestDetailPage() {
             include: ['SearchRequests']
           });
         } catch (error) {
-          console.log('SearchRequests not active, skipping refetch');
+          // SearchRequests not active, skipping refetch (normal)
         }
       });
 
@@ -88,7 +88,7 @@ export default function RequestDetailPage() {
             include: ['SearchRequests']
           });
         } catch (error) {
-          console.log('SearchRequests not active, skipping refetch');
+          // SearchRequests not active, skipping refetch (normal)
         }
       });
 
@@ -101,7 +101,7 @@ export default function RequestDetailPage() {
             include: ['SearchRequests']
           });
         } catch (error) {
-          console.log('SearchRequests not active, skipping refetch');
+          // SearchRequests not active, skipping refetch (normal)
         }
       });
 

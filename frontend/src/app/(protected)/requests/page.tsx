@@ -14,7 +14,7 @@ import { RatingDisplay } from '@/components/rating-stars';
 import { Plus, MapPin, Clock, Euro, Search } from 'lucide-react';
 
 const categories = ['Todos', 'Compras', 'Reparações', 'Companhia a idosos', 'Limpezas', 'Jardinagem'];
-const statuses = ['Todos', 'OPEN', 'IN_PROGRESS', 'DONE'];
+const statuses = ['Todos', 'OPEN', 'IN_PROGRESS', 'DONE', 'CANCELLED'];
 
 export default function RequestsPage() {
   const [selectedCategory, setSelectedCategory] = useState('Todos');
@@ -165,7 +165,8 @@ export default function RequestsPage() {
                 {status === 'Todos' ? 'Todos os estados' : 
                  status === 'OPEN' ? 'Abertos' :
                  status === 'IN_PROGRESS' ? 'Em progresso' :
-                 'Concluídos'}
+                 status === 'DONE' ? 'Concluídos' :
+                 'Cancelados'}
               </option>
             ))}
           </select>

@@ -19,6 +19,7 @@ export function ChatBox({ requestId }: ChatBoxProps) {
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { data, loading } = useQuery(GET_MESSAGES_BY_REQUEST, {
@@ -32,6 +33,7 @@ export function ChatBox({ requestId }: ChatBoxProps) {
   useEffect(() => {
     if (data?.messagesByRequest) {
       setMessages(data.messagesByRequest);
+      setInitialLoad(false);
     }
   }, [data]);
 
@@ -48,10 +50,12 @@ export function ChatBox({ requestId }: ChatBoxProps) {
     };
   }, []);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom only after initial load
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (!initialLoad && messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, initialLoad]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
