@@ -34,8 +34,8 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
 
 
   // Separar as reviews
-  const requesterReview = reviews.find(review => review.reviewerId === requesterId);
-  const helperReview = reviews.find(review => review.reviewerId === helperId);
+  const requesterReview = reviews.find(review => review.reviewer.id === requesterId);
+  const helperReview = reviews.find(review => review.reviewer.id === helperId);
 
   return (
     <div className="space-y-4">
@@ -47,11 +47,10 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
       {requesterReview && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-start space-x-3">
-            <GoogleAvatar 
-              src={requesterReview.reviewer.avatarUrl} 
-              alt={requesterReview.reviewer.name}
-              size={40}
-            />
+              <GoogleAvatar 
+                src={requesterReview.reviewer.avatarUrl} 
+                alt={requesterReview.reviewer.name}
+              />
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <div>
@@ -84,11 +83,10 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
       {helperReview && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-start space-x-3">
-            <GoogleAvatar 
-              src={helperReview.reviewer.avatarUrl} 
-              alt={helperReview.reviewer.name}
-              size={40}
-            />
+              <GoogleAvatar 
+                src={helperReview.reviewer.avatarUrl} 
+                alt={helperReview.reviewer.name}
+              />
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <div>
