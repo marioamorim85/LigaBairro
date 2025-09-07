@@ -22,7 +22,8 @@
       "WebSearch",
       "Bash(npx tsc:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run start:*)"
+      "Bash(npm run start:*)",
+      "Bash(npx prisma db seed:*)"
     ],
     "deny": [],
     "ask": []

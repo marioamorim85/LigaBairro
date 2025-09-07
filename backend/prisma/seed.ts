@@ -36,14 +36,14 @@ async function main() {
 
   console.log('✅ Skills created:', skills.length);
 
-  // Create admin user (fake for testing)
+  // Create admin user - Mario Amorim
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@ligabairro.local' },
-    update: {},
+    where: { email: 'mario.f.amorim@gmail.com' },
+    update: { role: 'ADMIN' },
     create: {
-      name: 'Admin LigaBairro',
-      email: 'admin@ligabairro.local',
-      googleId: 'fake_admin_google_id',
+      name: 'Mário Amorim',
+      email: 'mario.f.amorim@gmail.com',
+      googleId: 'mario_admin_google_id',
       city: 'Fiães',
       lat: 40.9735,
       lng: -8.5480,

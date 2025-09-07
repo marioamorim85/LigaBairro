@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AdminStats {
+  activeRequests: Int!
+  averageRating: Float!
+  completedRequests: Int!
+  pendingReports: Int!
+  todayMessages: Int!
+  topCategories: [CategoryStats!]!
+  totalApplications: Int!
+  totalMessages: Int!
+  totalRequests: Int!
+  totalUsers: Int!
+}
+
 type Application {
   createdAt: DateTime!
   helper: User
@@ -16,6 +29,11 @@ type Application {
 input ApplyToRequestInput {
   message: String
   requestId: String!
+}
+
+type CategoryStats {
+  category: String!
+  count: Int!
 }
 
 input CreateRequestInput {
@@ -96,6 +114,7 @@ enum NotificationType {
 }
 
 type Query {
+  adminStats: AdminStats!
   canReview(requestId: String!, revieweeId: String!): Boolean!
   getUserNotifications(limit: Int! = 50, offset: Int! = 0): [Notification!]!
   me: User

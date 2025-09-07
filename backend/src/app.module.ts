@@ -13,6 +13,7 @@ import { ApplicationsModule } from './applications/applications.module';
 import { MessagesModule } from './messages/messages.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ReportsModule } from './reports/reports.module';
+import { StatisticsModule } from './statistics/statistics.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { HealthModule } from './health/health.module';
@@ -60,6 +61,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     MessagesModule,
     ReviewsModule,
     ReportsModule,
+    StatisticsModule,
     NotificationsModule,
     UploadsModule,
   ],
