@@ -333,7 +333,7 @@ export default function RequestDetailPage() {
             {/* Owner actions */}
             {isOwner && request.status !== 'DONE' && request.status !== 'CANCELLED' && (
               <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm" asChild className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300">
+                <Button variant="info" size="sm" asChild>
                   <Link href={`/requests/${request.id}/edit`}>
                     <Edit className="w-4 h-4 mr-2" />
                     Editar
@@ -342,10 +342,9 @@ export default function RequestDetailPage() {
                 
                 {(request.status === 'OPEN' || request.status === 'IN_PROGRESS') && (
                   <Button 
-                    variant="default" 
+                    variant="success" 
                     size="sm" 
                     onClick={handleCloseRequest}
-                    className="bg-green-600 hover:bg-green-700 text-white shadow-sm"
                   >
                     <Settings className="w-4 h-4 mr-2" />
                     Concluir
@@ -354,10 +353,9 @@ export default function RequestDetailPage() {
                 
                 {request.status === 'OPEN' && (
                   <Button 
-                    variant="outline" 
+                    variant="reject" 
                     size="sm" 
                     onClick={handleCancelRequest}
-                    className="border-gray-300 text-gray-600 hover:bg-gray-50 hover:border-gray-400"
                   >
                     <X className="w-4 h-4 mr-2" />
                     Cancelar
@@ -512,6 +510,7 @@ export default function RequestDetailPage() {
                           </Badge>
                           {application.status === 'APPLIED' && (
                             <Button
+                              variant="accept"
                               size="sm"
                               onClick={() => handleAcceptApplication(application.id)}
                             >
@@ -607,6 +606,7 @@ export default function RequestDetailPage() {
                   rows={3}
                 />
                 <Button
+                  variant="magic"
                   onClick={handleApply}
                   disabled={isApplying}
                   className="w-full"
@@ -642,11 +642,10 @@ export default function RequestDetailPage() {
                 {canRemoveApplication && (
                   <div className="text-center">
                     <Button
-                      variant="outline"
+                      variant="reject"
                       size="sm"
                       onClick={() => handleRemoveApplication(userApplication.id)}
                       disabled={isRemoving}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       {isRemoving ? 'A remover...' : 'Remover candidatura'}
                     </Button>
@@ -731,9 +730,9 @@ export default function RequestDetailPage() {
                           });
                           setShowReviewDialog(true);
                         }}
-                        variant="outline"
+                        variant="warning"
                         size="sm"
-                        className="w-full border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                        className="w-full"
                       >
                         <Star className="w-4 h-4 mr-2" />
                         Avaliar {acceptedApplication.helper.name}
@@ -750,9 +749,9 @@ export default function RequestDetailPage() {
                           });
                           setShowReviewDialog(true);
                         }}
-                        variant="outline"
+                        variant="warning"
                         size="sm"
-                        className="w-full border-blue-300 text-blue-700 hover:bg-blue-50"
+                        className="w-full"
                       >
                         <Star className="w-4 h-4 mr-2" />
                         Avaliar {request.requester.name}

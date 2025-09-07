@@ -7,6 +7,7 @@ import { SEND_MESSAGE } from '@/lib/graphql/mutations';
 import { useAuth } from '@/components/auth/auth-provider';
 import { socketService } from '@/lib/socket';
 import { Button } from '@/components/ui/button';
+import { SendButton } from '@/components/ui/action-buttons';
 import { Input } from '@/components/ui/input';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
 import { Send } from 'lucide-react';
@@ -212,17 +213,16 @@ export function ChatBox({ requestId }: ChatBoxProps) {
           className="flex-1"
           maxLength={500}
         />
-        <Button
+        <SendButton
           type="submit"
           disabled={!newMessage.trim() || sending}
           size="sm"
+          loading={sending}
+          loadingText="Enviando"
+          showIcon={!sending}
         >
-          {sending ? (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <Send className="w-4 h-4" />
-          )}
-        </Button>
+          {sending ? '' : ''}
+        </SendButton>
       </form>
 
       {newMessage.length > 0 && (

@@ -10,11 +10,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 active:scale-95 hover:animate-pulse",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-105 active:scale-95 hover:animate-wiggle",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:scale-105 active:scale-95 hover:animate-wiggle shadow-md hover:shadow-destructive/25",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:scale-105 active:scale-95 hover:shadow-lg",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground hover:scale-105 active:scale-95 hover:shadow-lg hover:border-primary/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:scale-105 active:scale-95 hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground hover:scale-105 active:scale-95 hover:backdrop-blur-sm",
@@ -26,13 +26,26 @@ const buttonVariants = cva(
         celebration: "bg-gradient-to-r from-purple-500 to-pink-600 text-white hover:scale-110 active:scale-95 shadow-lg hover:shadow-purple-500/50 animate-heartbeat",
         magic: "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:scale-105 active:scale-95 hover:btn-rainbow shadow-lg animate-shimmer",
         love: "bg-gradient-to-r from-pink-500 to-rose-600 text-white hover:scale-105 active:scale-95 shadow-lg hover:shadow-pink-500/50 cursor-heart",
+        // New Enhanced Variants for Better UX
+        accept: "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-green-500/30 transition-all duration-300",
+        reject: "bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-red-500/30 transition-all duration-300 hover:animate-wiggle",
+        success: "bg-gradient-to-r from-green-400 to-emerald-500 text-white hover:scale-105 active:scale-95 shadow-lg hover:shadow-green-400/40 transition-all duration-300",
+        warning: "bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-amber-500/30",
+        info: "bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-blue-500/30",
+        premium: "bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white hover:scale-105 active:scale-95 shadow-xl hover:shadow-purple-600/50 animate-shimmer relative overflow-hidden",
+        cta: "bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700 hover:scale-110 active:scale-95 shadow-xl hover:shadow-orange-500/40 animate-pulse-glow font-semibold",
+        minimal: "bg-transparent text-foreground hover:bg-accent/50 hover:text-accent-foreground transition-colors duration-200 border-0",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        xs: "h-7 px-2 text-xs rounded",
+        sm: "h-8 px-3 text-sm rounded-md",
+        default: "h-10 px-4 py-2 text-sm",
+        lg: "h-11 px-8 text-base rounded-md",
+        xl: "h-12 px-10 text-base rounded-lg",
+        xxl: "h-14 px-12 text-lg rounded-lg font-semibold",
         icon: "h-10 w-10",
-        xl: "h-12 rounded-lg px-10 text-base",
+        "icon-sm": "h-8 w-8",
+        "icon-lg": "h-12 w-12",
       },
     },
     defaultVariants: {

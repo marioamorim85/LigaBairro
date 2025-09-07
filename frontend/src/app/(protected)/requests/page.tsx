@@ -218,7 +218,7 @@ export default function RequestsPage() {
           <p className="text-gray-600 mb-6">Não conseguimos carregar os pedidos. Que tal tentar novamente?</p>
           <Button 
             onClick={() => refetch()}
-            variant="soft"
+            variant="info"
             className="animate-bounce-in"
           >
             Tentar novamente
