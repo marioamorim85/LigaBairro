@@ -83,18 +83,16 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
                 alt={helperReview.reviewer.name}
               />
             <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <p className="font-medium text-green-800">
-                    {helperReview.reviewer.name} avaliou {helperReview.reviewee.name}
-                  </p>
-                  <p className="text-xs text-green-600">
-                    {formatDatePT(helperReview.createdAt, { short: true, includeTime: true })}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-1">
+              <div className="space-y-2">
+                <p className="font-medium text-green-800">
+                  {helperReview.reviewer.name} avaliou {helperReview.reviewee.name}
+                </p>
+                <div className="flex items-center">
                   <RatingStars rating={helperReview.rating} readonly size="sm" />
                 </div>
+                <p className="text-xs text-green-600">
+                  {formatDatePT(helperReview.createdAt, { short: true, includeTime: true })}
+                </p>
               </div>
               
               {helperReview.comment && (
