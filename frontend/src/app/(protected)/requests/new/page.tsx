@@ -312,8 +312,8 @@ export default function NewRequestPage() {
                   <p className="text-sm text-blue-700">
                     ✓ Horário definido: {(() => {
                       try {
-                        const start = new Date(watch('scheduledFrom'));
-                        const end = new Date(watch('scheduledTo'));
+                        const start = new Date(watch('scheduledFrom') || '');
+                        const end = new Date(watch('scheduledTo') || '');
                         const duration = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60));
                         return `${duration}h de duração`;
                       } catch {
@@ -415,17 +415,7 @@ export default function NewRequestPage() {
             >
               {isSubmitting ? 'A criar...' : 'Criar Pedido'}
             </Button>
-            {!isFormValid && (
-              <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
-                <p className="font-medium text-yellow-800">Para ativar o botão:</p>
-                <ul className="text-yellow-700 text-xs mt-1">
-                  {!watchedValues.title && <li>• Preenche o título</li>}
-                  {!watchedValues.description && <li>• Preenche a descrição</li>}
-                  {!watchedValues.category && <li>• Seleciona uma categoria</li>}
-                  {!selectedLocation && <li>• Seleciona localização no mapa</li>}
-                </ul>
-              </div>
-            )}
+            {/* Card de instruções removido conforme solicitado */}
             <Button
               type="button"
               variant="outline"

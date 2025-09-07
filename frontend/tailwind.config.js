@@ -66,10 +66,100 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pulse-glow": {
+          "0%, 100%": {
+            opacity: "1",
+            transform: "scale(1)"
+          },
+          "50%": {
+            opacity: "0.8",
+            transform: "scale(1.05)"
+          }
+        },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0px)"
+          },
+          "50%": {
+            transform: "translateY(-10px)"
+          }
+        },
+        "spin-slow": {
+          "from": {
+            transform: "rotate(0deg)"
+          },
+          "to": {
+            transform: "rotate(360deg)"
+          }
+        },
+        "shimmer": {
+          "0%": {
+            backgroundPosition: "-200% 0"
+          },
+          "100%": {
+            backgroundPosition: "200% 0"
+          }
+        },
+        "wiggle": {
+          "0%, 100%": { transform: "rotate(-3deg)" },
+          "50%": { transform: "rotate(3deg)" }
+        },
+        "heartbeat": {
+          "0%, 50%": { transform: "scale(1)" },
+          "25%": { transform: "scale(1.1)" }
+        },
+        "bounce-in": {
+          "0%": {
+            transform: "scale(0.3)",
+            opacity: "0"
+          },
+          "50%": {
+            transform: "scale(1.05)"
+          },
+          "70%": {
+            transform: "scale(0.9)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1"
+          }
+        },
+        "tada": {
+          "0%": {
+            transform: "scale3d(1, 1, 1)"
+          },
+          "10%, 20%": {
+            transform: "scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg)"
+          },
+          "30%, 50%, 70%, 90%": {
+            transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)"
+          },
+          "40%, 60%, 80%": {
+            transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg)"
+          },
+          "100%": {
+            transform: "scale3d(1, 1, 1)"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+        "spin-slow": "spin-slow 3s linear infinite",
+        "shimmer": "shimmer 2s linear infinite",
+        "wiggle": "wiggle 1s ease-in-out",
+        "heartbeat": "heartbeat 2s ease-in-out infinite",
+        "bounce-in": "bounce-in 0.6s ease-out",
+        "tada": "tada 1s ease-in-out"
+      },
+      boxShadow: {
+        "glass": "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+        "neon": "0 0 5px theme('colors.primary.DEFAULT'), 0 0 20px theme('colors.primary.DEFAULT'), 0 0 35px theme('colors.primary.DEFAULT')",
+        "glow": "0 0 20px rgba(59, 130, 246, 0.5)",
+        "elevated": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        "floating": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
       },
     },
   },

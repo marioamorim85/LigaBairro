@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Calendar, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +23,22 @@ export function DateTimePicker({
   disabled = false
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+
+  // Atualiza a posição do dropdown sempre que abrir
+  useLayoutEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        maxWidth: 400,
+        position: 'absolute',
+      });
+    }
+  }, [isOpen]);
   const [selectedDate, setSelectedDate] = useState(value ? value.split('T')[0] : '');
   const [selectedTime, setSelectedTime] = useState(value ? value.split('T')[1]?.slice(0, 5) || '' : '');
 
@@ -112,6 +129,7 @@ export function DateTimePicker({
     setIsOpen(false);
   };
 
+
   return (
     <div className="relative">
       {label && (
@@ -121,6 +139,7 @@ export function DateTimePicker({
       )}
       
       <Button
+        ref={buttonRef}
         type="button"
         variant="outline"
         disabled={disabled}
@@ -131,8 +150,8 @@ export function DateTimePicker({
         {formatDisplayValue(value)}
       </Button>
 
-      {isOpen && (
-        <Card className="absolute z-50 mt-1 w-full shadow-lg">
+      {isOpen && typeof window !== 'undefined' && createPortal(
+        <Card className="z-[9999]" style={dropdownStyle}>
           <CardContent className="p-4">
             <div className="space-y-4">
               {/* Quick Select Options */}
@@ -204,8 +223,10 @@ export function DateTimePicker({
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card>,
+        document.body
       )}
+
     </div>
   );
 }

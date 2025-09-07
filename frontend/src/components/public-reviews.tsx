@@ -52,21 +52,16 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
                 alt={requesterReview.reviewer.name}
               />
             <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <p className="font-medium text-blue-800">
-                    {requesterReview.reviewer.name} avaliou {requesterReview.reviewee.name}
-                  </p>
-                  <p className="text-xs text-blue-600">
-                    {formatDatePT(requesterReview.createdAt, { short: true, includeTime: true })}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-1">
+              <div className="space-y-2">
+                <p className="font-medium text-blue-800">
+                  {requesterReview.reviewer.name} avaliou {requesterReview.reviewee.name}
+                </p>
+                <div className="flex items-center">
                   <RatingStars rating={requesterReview.rating} readonly size="sm" />
-                  <span className="text-sm font-medium text-blue-700">
-                    {requesterReview.rating}/5
-                  </span>
                 </div>
+                <p className="text-xs text-blue-600">
+                  {formatDatePT(requesterReview.createdAt, { short: true, includeTime: true })}
+                </p>
               </div>
               
               {requesterReview.comment && (
@@ -99,9 +94,6 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
                 </div>
                 <div className="flex items-center space-x-1">
                   <RatingStars rating={helperReview.rating} readonly size="sm" />
-                  <span className="text-sm font-medium text-green-700">
-                    {helperReview.rating}/5
-                  </span>
                 </div>
               </div>
               
@@ -121,11 +113,8 @@ export function PublicReviews({ reviews, requesterId, helperId }: PublicReviewsP
           <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
             <div className="text-center">
               <p className="font-medium">Avaliação Média</p>
-              <div className="flex items-center space-x-1 mt-1">
+              <div className="flex items-center justify-center mt-1">
                 <RatingStars rating={Math.round((requesterReview.rating + helperReview.rating) / 2)} readonly size="sm" />
-                <span className="font-semibold">
-                  {((requesterReview.rating + helperReview.rating) / 2).toFixed(1)}
-                </span>
               </div>
             </div>
             <div className="text-center">

@@ -12,7 +12,9 @@ import { Badge } from '@/components/ui/badge';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
 import { RatingDisplay } from '@/components/rating-stars';
 import { RequestCardSkeleton } from '@/components/ui/skeleton';
-import { Plus, MapPin, Clock, Euro, Search } from 'lucide-react';
+import { LoadingMessages } from '@/components/ui/loading-states';
+import { useToastDelight } from '@/components/ui/toast-delight';
+import { Plus, MapPin, Clock, Euro, Search, Sparkles } from 'lucide-react';
 
 const categories = ['Todos', 'Compras', 'Reparações', 'Companhia a idosos', 'Limpezas', 'Jardinagem'];
 const statuses = ['Todos', 'OPEN', 'IN_PROGRESS', 'DONE', 'CANCELLED'];
@@ -22,6 +24,7 @@ export default function RequestsPage() {
   const [selectedStatus, setSelectedStatus] = useState('OPEN');
   const [searchTerm, setSearchTerm] = useState('');
   const client = useApolloClient();
+  const { showSuccess, showCelebration } = useToastDelight();
 
   const { data, loading, error, refetch } = useQuery(SEARCH_REQUESTS, {
     variables: {
@@ -120,7 +123,12 @@ export default function RequestsPage() {
             <span>{!loading && `${filteredRequests.length} pedidos ativos`}</span>
           </div>
         </div>
-        <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all" asChild>
+        <Button 
+          variant="magic"
+          size="lg" 
+          className="shadow-lg hover:shadow-xl" 
+          asChild
+        >
           <Link href="/requests/new">
             <Plus className="w-5 h-5 mr-2" />
             Novo Pedido
@@ -188,31 +196,44 @@ export default function RequestsPage() {
 
       {/* Requests Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <RequestCardSkeleton key={i} />
-          ))}
+        <div className="space-y-8">
+          <LoadingMessages 
+            messages={[
+              'A procurar pelos melhores pedidos...',
+              'A conectar com a comunidade de Fiaîs...',
+              'A organizar oportunidades incríveis...',
+              'Quase lá... preparando surpresas!'
+            ]}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <RequestCardSkeleton key={i} />
+            ))}
+          </div>
         </div>
       ) : error ? (
         <div className="text-center py-8">
-          <p className="text-red-600">Erro ao carregar pedidos. Tente novamente.</p>
+          <div className="text-6xl mb-4">😢</div>
+          <p className="text-red-600 text-lg mb-4">Oops! Algo correu mal...</p>
+          <p className="text-gray-600 mb-6">Não conseguimos carregar os pedidos. Que tal tentar novamente?</p>
+          <Button 
+            onClick={() => refetch()}
+            variant="soft"
+            className="animate-bounce-in"
+          >
+            Tentar novamente
+          </Button>
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-600 mb-4">Nenhum pedido encontrado com esses filtros.</p>
-          <Button asChild>
-            <Link href="/requests/new">
-              <Plus className="w-4 h-4 mr-2" />
-              Criar o primeiro pedido
-            </Link>
-          </Button>
+          <p className="text-gray-600 text-lg mb-4">Nenhum pedido encontrado</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRequests.map((request: any, index: number) => (
             <Link key={request.id} href={`/requests/${request.id}`}>
-              <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-1 bg-white/80 backdrop-blur-sm border-0 shadow-lg animate-slide-up h-full flex flex-col" 
-                    style={{ animationDelay: `${index * 100}ms` }}>
+              <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-2 bg-white/80 backdrop-blur-sm border-0 shadow-lg animate-fade-in-up h-full flex flex-col group" 
+                    style={{ animationDelay: `${index * 50}ms` }}>
                 <CardHeader className="pb-4 flex-grow-0">
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-lg line-clamp-2 font-semibold text-gray-900">

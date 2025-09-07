@@ -18,7 +18,11 @@
       "WebFetch(domain:localhost)",
       "Bash(taskkill:*)",
       "Bash(cmd /c:*)",
-      "Bash(npx prisma studio:*)"
+      "Bash(npx prisma studio:*)",
+      "WebSearch",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run start:*)"
     ],
     "deny": [],
     "ask": []
