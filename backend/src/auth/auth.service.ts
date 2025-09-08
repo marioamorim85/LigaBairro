@@ -22,6 +22,9 @@ export class AuthService {
     const existingUser = await this.usersService.findByGoogleId(profile.id);
 
     if (existingUser) {
+      if (!existingUser.isActive) {
+        return { error: 'BLOCKED_BY_ADMIN', message: 'A sua conta foi bloqueada por um administrador.' };
+      }
       // Update user info if needed
       return this.usersService.update(existingUser.id, {
         name: profile.name,

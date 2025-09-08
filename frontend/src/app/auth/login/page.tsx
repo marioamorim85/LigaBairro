@@ -1,9 +1,29 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 export default function LoginPage() {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_BASE || 'http://localhost:4000';
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+  const error = searchParams.get('error');
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Falhou',
+        description: error,
+      });
+    }
+  }, [error, toast]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
@@ -21,6 +41,16 @@ export default function LoginPage() {
         </CardHeader>
         
         <CardContent className="space-y-6">
+          {error && (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Acesso Negado</AlertTitle>
+              <AlertDescription>
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Button 
             size="lg" 
             className="w-full h-12 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm transition-all hover:shadow-md" 

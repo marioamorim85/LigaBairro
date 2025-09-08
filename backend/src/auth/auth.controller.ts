@@ -20,6 +20,12 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleCallback(@Req() req: any, @Res() res: Response) {
+    if (req.user.error === 'BLOCKED_BY_ADMIN') {
+      const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+      const errorMessage = encodeURIComponent(req.user.message);
+      return res.redirect(`${frontendUrl}/auth/login?error=${errorMessage}`);
+    }
+
     const { access_token } = await this.authService.login(req.user);
     
     // Set JWT in httpOnly cookie
