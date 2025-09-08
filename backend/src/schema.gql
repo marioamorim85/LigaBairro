@@ -297,6 +297,7 @@ type UserActivity {
 }
 
 type UserManagement {
+  avatarUrl: String
   averageRating: Float
   createdAt: DateTime!
   email: String!

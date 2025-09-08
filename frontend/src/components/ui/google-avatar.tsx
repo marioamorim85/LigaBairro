@@ -24,7 +24,7 @@ export function GoogleAvatar({ src, alt, fallback, className }: GoogleAvatarProp
   };
 
   // Se não há src ou houve erro, mostra fallback
-  const shouldShowFallback = !src || imageError || !imageLoaded;
+  const shouldShowFallback = !src || imageError;
 
   return (
     <Avatar className={className}>

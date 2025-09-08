@@ -55,6 +55,7 @@ export const GET_USERS_FOR_MANAGEMENT = gql`
       id
       name
       email
+      avatarUrl
       role
       isActive
       createdAt

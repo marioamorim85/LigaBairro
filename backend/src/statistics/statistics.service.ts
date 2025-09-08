@@ -31,6 +31,7 @@ export interface UserManagement {
   id: string;
   name: string;
   email: string;
+  avatarUrl?: string;
   role: string;
   createdAt: Date;
   totalRequests: number;
@@ -283,12 +284,16 @@ export class StatisticsService {
           select: { rating: true },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return users.map(user => ({
       id: user.id,
       name: user.name,
       email: user.email,
+      avatarUrl: user.avatarUrl,
       role: user.role,
       createdAt: user.createdAt,
       totalRequests: user.requests.length,

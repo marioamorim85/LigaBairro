@@ -11,6 +11,9 @@ export class UserManagement {
   @Field()
   email: string;
 
+  @Field({ nullable: true })
+  avatarUrl?: string;
+
   @Field()
   role: string;
 
