@@ -2,17 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ActivityReport {
+  completedRequests: Float!
+  date: String!
+  newApplications: Float!
+  newRequests: Float!
+  newUsers: Float!
+  totalMessages: Float!
+}
+
 type AdminStats {
   activeRequests: Int!
   averageRating: Float!
   completedRequests: Int!
+  monthlyGrowth: MonthlyGrowth!
   pendingReports: Int!
+  recentActivity: RecentActivity!
   todayMessages: Int!
   topCategories: [CategoryStats!]!
   totalApplications: Int!
   totalMessages: Int!
   totalRequests: Int!
   totalUsers: Int!
+  userActivity: UserActivity!
 }
 
 type Application {
@@ -75,20 +87,30 @@ type Message {
   text: String!
 }
 
+type MonthlyGrowth {
+  requests: Int!
+  users: Int!
+}
+
 type Mutation {
   acceptApplication(applicationId: String!): Application!
   applyToRequest(input: ApplyToRequestInput!): Application!
   createRequest(input: CreateRequestInput!): Request!
   createReview(input: CreateReviewInput!): Review!
+  deleteUser(userId: String!): Boolean!
+  dismissReport(adminNotes: String, reportId: String!): Boolean!
   markAllNotificationsAsRead: Boolean!
   markNotificationAsRead(id: String!): Notification!
   removeApplication(applicationId: String!): RemoveApplicationResult!
   reportRequest(input: ReportRequestInput!): Report!
   reportUser(input: ReportUserInput!): Report!
+  resolveReport(action: String!, adminNotes: String, reportId: String!): Boolean!
   sendMessage(input: SendMessageInput!): Message!
+  toggleUserStatus(userId: String!): Boolean!
   updateProfile(input: UpdateUserInput!): User!
   updateRequest(id: String!, input: UpdateRequestInput!): Request!
   updateRequestStatus(id: String!, status: String!): Request!
+  updateUserRole(newRole: String!, userId: String!): Boolean!
   updateUserSkills(input: UpdateUserSkillsInput!): User!
 }
 
@@ -114,6 +136,7 @@ enum NotificationType {
 }
 
 type Query {
+  activityReport(days: Int! = 30): [ActivityReport!]!
   adminStats: AdminStats!
   canReview(requestId: String!, revieweeId: String!): Boolean!
   getUserNotifications(limit: Int! = 50, offset: Int! = 0): [Notification!]!
@@ -129,6 +152,7 @@ type Query {
   unreadNotificationsCount: Int!
   userReviews(limit: Int! = 10, userId: String!): [Review!]!
   userStats(userId: String!): UserStats!
+  usersForManagement: [UserManagement!]!
 }
 
 type RatingDistribution {
@@ -139,6 +163,12 @@ type RatingDistribution {
   rating5: Int!
 }
 
+type RecentActivity {
+  newApplications: Int!
+  newRequests: Int!
+  newUsers: Int!
+}
+
 type RemoveApplicationResult {
   id: ID!
   message: String!
@@ -146,6 +176,7 @@ type RemoveApplicationResult {
 }
 
 type Report {
+  adminNotes: String
   createdAt: DateTime!
   details: String
   id: ID!
@@ -258,6 +289,23 @@ type User {
   role: String!
   skills: [UserSkill!]
   updatedAt: DateTime!
+}
+
+type UserActivity {
+  activeThisWeek: Int!
+  activeToday: Int!
+}
+
+type UserManagement {
+  averageRating: Float
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  role: String!
+  totalApplications: Float!
+  totalRequests: Float!
 }
 
 type UserSkill {

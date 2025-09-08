@@ -71,6 +71,9 @@ export class Report {
   @Field()
   status: string;
 
+  @Field({ nullable: true })
+  adminNotes?: string;
+
   @Field()
   createdAt: Date;
 

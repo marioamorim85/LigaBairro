@@ -21,6 +21,7 @@ model User {
   lng               Float?
   bio               String?  @db.Text
   role              Role     @default(USER) // USER, ADMIN
+  isActive          Boolean  @default(true) // Active user status for blocking
   ratingAvg         Float?   @default(0)
   emailNotifications Boolean  @default(true)
   skills            UserSkill[]
@@ -52,8 +53,8 @@ model Skill {
 model UserSkill {
   userId  String
   skillId String
-  user    User  @relation(fields: [userId], references: [id])
-  skill   Skill @relation(fields: [skillId], references: [id])
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill   Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
   
   @@id([userId, skillId])
   @@map("user_skills")
@@ -62,7 +63,7 @@ model UserSkill {
 model Request {
   id            String   @id @default(cuid())
   requesterId   String
-  requester     User     @relation("UserRequests", fields: [requesterId], references: [id])
+  requester     User     @relation("UserRequests", fields: [requesterId], references: [id], onDelete: Cascade)
   title         String
   description   String   @db.Text
   category      String
@@ -97,8 +98,8 @@ model Application {
   helperId  String
   message   String?
   status    ApplicationStatus @default(APPLIED) // APPLIED, ACCEPTED, REJECTED
-  request   Request  @relation(fields: [requestId], references: [id])
-  helper    User     @relation(fields: [helperId], references: [id])
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  helper    User     @relation(fields: [helperId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@map("applications")
@@ -116,8 +117,8 @@ model Message {
   senderId  String
   text      String   @db.Text
   createdAt DateTime @default(now())
-  request   Request  @relation(fields: [requestId], references: [id])
-  sender    User     @relation(fields: [senderId], references: [id])
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   @@map("messages")
 }
@@ -130,9 +131,9 @@ model Review {
   rating      Int
   comment     String?
   createdAt   DateTime @default(now())
-  request     Request  @relation(fields: [requestId], references: [id])
-  reviewer    User     @relation("ReviewsGiven", fields: [reviewerId], references: [id])
-  reviewee    User     @relation("ReviewsRecv", fields: [revieweeId], references: [id])
+  request     Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  reviewer    User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewee    User     @relation("ReviewsRecv", fields: [revieweeId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }
@@ -144,6 +145,7 @@ model Report {
   requestId     String?
   reason        String   @db.Text
   status        String   @default("OPEN")
+  adminNotes    String?  @db.Text
   createdAt     DateTime @default(now())
 
   @@map("reports")
@@ -159,7 +161,7 @@ model Notification {
   read      Boolean  @default(false)
   emailSent Boolean  @default(false)
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
 }

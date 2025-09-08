@@ -46,4 +46,33 @@ export class ReportsResolver {
     }
     return this.reportsService.findAll();
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async resolveReport(
+    @CurrentUser() user: any,
+    @Args('reportId') reportId: string,
+    @Args('action') action: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    
+    return this.reportsService.resolveReport(reportId, action, adminNotes);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  async dismissReport(
+    @CurrentUser() user: any,
+    @Args('reportId') reportId: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    
+    return this.reportsService.dismissReport(reportId, adminNotes);
+  }
 }

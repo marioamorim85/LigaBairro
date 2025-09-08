@@ -10,6 +10,36 @@ export class CategoryStats {
 }
 
 @ObjectType()
+export class MonthlyGrowth {
+  @Field(() => Int)
+  users: number;
+
+  @Field(() => Int)
+  requests: number;
+}
+
+@ObjectType()
+export class UserActivity {
+  @Field(() => Int)
+  activeToday: number;
+
+  @Field(() => Int)
+  activeThisWeek: number;
+}
+
+@ObjectType()
+export class RecentActivity {
+  @Field(() => Int)
+  newUsers: number;
+
+  @Field(() => Int)
+  newRequests: number;
+
+  @Field(() => Int)
+  newApplications: number;
+}
+
+@ObjectType()
 export class AdminStats {
   @Field(() => Int)
   totalUsers: number;
@@ -40,4 +70,13 @@ export class AdminStats {
 
   @Field(() => [CategoryStats])
   topCategories: CategoryStats[];
+
+  @Field(() => MonthlyGrowth)
+  monthlyGrowth: MonthlyGrowth;
+
+  @Field(() => UserActivity)
+  userActivity: UserActivity;
+
+  @Field(() => RecentActivity)
+  recentActivity: RecentActivity;
 }
