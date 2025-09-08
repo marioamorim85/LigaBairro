@@ -164,3 +164,21 @@ export const REPORT_REQUEST = gql`
     reportRequest(requestId: $requestId, reason: $reason)
   }
 `;
+
+export const TOGGLE_USER_STATUS = gql`
+  mutation ToggleUserStatus($userId: String!) {
+    toggleUserStatus(userId: $userId)
+  }
+`;
+
+export const UPDATE_USER_ROLE = gql`
+  mutation UpdateUserRole($userId: String!, $newRole: String!) {
+    updateUserRole(userId: $userId, newRole: $newRole)
+  }
+`;
+
+export const DELETE_USER = gql`
+  mutation DeleteUser($userId: String!) {
+    deleteUser(userId: $userId)
+  }
+`;
