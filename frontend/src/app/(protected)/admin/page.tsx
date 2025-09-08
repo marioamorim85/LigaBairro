@@ -172,7 +172,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="users" className="space-y-6">
+      <Tabs defaultValue="dashboard" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="reports">Denúncias</TabsTrigger>
@@ -182,7 +182,57 @@ export default function AdminPage() {
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-6">
-          {/* Enhanced Stats Overview */}
+          {/* Executive Summary */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Resumo Executivo</h2>
+              <Badge className="bg-blue-500">Hoje</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{stats?.recentActivity?.newUsers || 0}</div>
+                <div className="text-sm text-gray-600">Novos utilizadores</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{stats?.recentActivity?.newRequests || 0}</div>
+                <div className="text-sm text-gray-600">Novos pedidos</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{stats?.recentActivity?.newApplications || 0}</div>
+                <div className="text-sm text-gray-600">Candidaturas</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">{stats?.todayMessages || 0}</div>
+                <div className="text-sm text-gray-600">Mensagens hoje</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Alerts Section */}
+          {(stats?.pendingReports > 0 || stats?.activeRequests > 10) && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+              <div className="flex items-center mb-4">
+                <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
+                <h2 className="text-lg font-semibold text-red-800">Alertas e Atenção Necessária</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {stats?.pendingReports > 0 && (
+                  <div className="flex items-center justify-between p-3 bg-red-100 rounded-lg">
+                    <span className="text-red-800 font-medium">Denúncias pendentes</span>
+                    <Badge variant="destructive">{stats.pendingReports}</Badge>
+                  </div>
+                )}
+                {stats?.activeRequests > 10 && (
+                  <div className="flex items-center justify-between p-3 bg-yellow-100 rounded-lg">
+                    <span className="text-yellow-800 font-medium">Muitos pedidos ativos</span>
+                    <Badge className="bg-yellow-500">{stats.activeRequests}</Badge>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Main Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Utilizadores */}
             <Card className="border-l-4 border-l-blue-500">
@@ -305,6 +355,200 @@ export default function AdminPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Top Categories and Insights */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Top Categories */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BarChart3 className="w-5 h-5 mr-2" />
+                  Categorias Mais Populares
+                </CardTitle>
+                <CardDescription>Pedidos por categoria</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {statsLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex justify-between items-center animate-pulse">
+                        <div className="bg-gray-200 h-4 w-24 rounded"></div>
+                        <div className="bg-gray-200 h-4 w-8 rounded"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {stats?.topCategories?.map((category: any, index: number) => (
+                      <div key={category.category} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-3 h-3 rounded-full ${
+                            index === 0 ? 'bg-yellow-400' :
+                            index === 1 ? 'bg-gray-400' :
+                            index === 2 ? 'bg-orange-400' :
+                            'bg-blue-400'
+                          }`}></div>
+                          <span className="font-medium capitalize">{category.category}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className={`text-right text-sm px-2 py-1 rounded ${
+                            index === 0 ? 'bg-yellow-100 text-yellow-800' :
+                            index === 1 ? 'bg-gray-100 text-gray-800' :
+                            index === 2 ? 'bg-orange-100 text-orange-800' :
+                            'bg-blue-100 text-blue-800'
+                          }`}>
+                            {category.count} pedidos
+                          </div>
+                          {index === 0 && <Badge className="bg-yellow-500">Top #1</Badge>}
+                        </div>
+                      </div>
+                    )) || (
+                      <div className="text-center text-gray-500 py-4">
+                        Sem dados de categorias disponíveis
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Platform Health */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Activity className="w-5 h-5 mr-2" />
+                  Saúde da Plataforma
+                </CardTitle>
+                <CardDescription>Métricas de performance</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-green-800">Taxa de Sucesso</p>
+                    <p className="text-sm text-green-600">{stats ? Math.round((stats.completedRequests / (stats.totalRequests || 1)) * 100) : 0}% pedidos concluídos</p>
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {stats ? Math.round((stats.completedRequests / (stats.totalRequests || 1)) * 100) : 0}%
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-blue-800">Engajamento</p>
+                    <p className="text-sm text-blue-600">{stats ? Math.round((stats.userActivity.activeThisWeek / (stats.totalUsers || 1)) * 100) : 0}% utilizadores ativos</p>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {stats ? Math.round((stats.userActivity.activeThisWeek / (stats.totalUsers || 1)) * 100) : 0}%
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-purple-800">Qualidade</p>
+                    <p className="text-sm text-purple-600">Avaliação média: {stats?.averageRating?.toFixed(1) || 'N/A'}</p>
+                  </div>
+                  <div className="flex items-center text-2xl font-bold text-purple-600">
+                    {stats?.averageRating?.toFixed(1) || 'N/A'}
+                    <Star className="w-5 h-5 ml-1 text-yellow-400 fill-current" />
+                  </div>
+                </div>
+
+                <div className={`flex items-center justify-between p-3 rounded-lg ${
+                  (stats?.pendingReports || 0) > 0 ? 'bg-red-50' : 'bg-green-50'
+                }`}>
+                  <div>
+                    <p className={`font-medium ${
+                      (stats?.pendingReports || 0) > 0 ? 'text-red-800' : 'text-green-800'
+                    }`}>Estado do Sistema</p>
+                    <p className={`text-sm ${
+                      (stats?.pendingReports || 0) > 0 ? 'text-red-600' : 'text-green-600'
+                    }`}>
+                      {(stats?.pendingReports || 0) > 0 ? 'Requer atenção' : 'Funcionando perfeitamente'}
+                    </p>
+                  </div>
+                  <div className={`text-2xl ${
+                    (stats?.pendingReports || 0) > 0 ? 'text-red-600' : 'text-green-600'
+                  }`}>
+                    {(stats?.pendingReports || 0) > 0 ? '⚠️' : '✅'}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Growth Trends */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2" />
+                Tendências de Crescimento
+              </CardTitle>
+              <CardDescription>Crescimento mensal e atividade recente</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center p-4 bg-gradient-to-b from-green-50 to-green-100 rounded-lg">
+                  <div className="text-3xl font-bold text-green-600 mb-2">
+                    +{stats?.monthlyGrowth?.users || 0}
+                  </div>
+                  <p className="text-sm font-medium text-green-800">Novos utilizadores este mês</p>
+                  <p className="text-xs text-green-600 mt-1">
+                    {stats?.monthlyGrowth?.users > 0 ? 'Crescimento positivo' : 'Sem crescimento'}
+                  </p>
+                </div>
+
+                <div className="text-center p-4 bg-gradient-to-b from-blue-50 to-blue-100 rounded-lg">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">
+                    +{stats?.monthlyGrowth?.requests || 0}
+                  </div>
+                  <p className="text-sm font-medium text-blue-800">Novos pedidos este mês</p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    {stats?.monthlyGrowth?.requests > 0 ? 'Procura crescente' : 'Procura estável'}
+                  </p>
+                </div>
+
+                <div className="text-center p-4 bg-gradient-to-b from-purple-50 to-purple-100 rounded-lg">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">
+                    {stats?.userActivity?.activeThisWeek || 0}
+                  </div>
+                  <p className="text-sm font-medium text-purple-800">Utilizadores ativos (7 dias)</p>
+                  <p className="text-xs text-purple-600 mt-1">
+                    {((stats?.userActivity?.activeThisWeek || 0) / (stats?.totalUsers || 1) * 100).toFixed(1)}% da base
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium text-gray-800 mb-3">Insights Rápidos</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                    <div>
+                      <span className="font-medium">Utilizadores por pedido:</span> {stats?.totalUsers && stats?.totalRequests ? (stats.totalUsers / stats.totalRequests).toFixed(1) : 'N/A'}
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                    <div>
+                      <span className="font-medium">Candidaturas por pedido:</span> {stats?.totalRequests && stats?.totalApplications ? (stats.totalApplications / stats.totalRequests).toFixed(1) : 'N/A'}
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                    <div>
+                      <span className="font-medium">Mensagens por utilizador:</span> {stats?.totalUsers && stats?.totalMessages ? (stats.totalMessages / stats.totalUsers).toFixed(1) : 'N/A'}
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                    <div>
+                      <span className="font-medium">Taxa de atividade diária:</span> {stats?.userActivity?.activeToday && stats?.userActivity?.activeThisWeek ? Math.round((stats.userActivity.activeToday / stats.userActivity.activeThisWeek) * 100) : 0}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="reports" className="space-y-6">
