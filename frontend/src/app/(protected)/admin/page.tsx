@@ -10,10 +10,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, AlertTriangle, Users, MessageSquare, TrendingUp, Database, Star, Settings, CheckCircle, XCircle, Calendar, Activity, BarChart3, Lock, Unlock, MoreHorizontal, UserPlus, UserMinus, Trash2 } from 'lucide-react';
+import { Shield, AlertTriangle, Users, MessageSquare, TrendingUp, Database, Star, Settings, CheckCircle, XCircle, Calendar, Activity, BarChart3, Lock, Unlock, MoreHorizontal, UserPlus, UserMinus, Trash2, FileText, Pause, Edit, Timer, Ban, Eye } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';
-import { GET_ADMIN_STATS, GET_REPORTS, GET_USERS_FOR_MANAGEMENT, GET_ACTIVITY_REPORT, RESOLVE_REPORT, DISMISS_REPORT, TOGGLE_USER_STATUS, UPDATE_USER_ROLE, DELETE_USER } from '@/lib/graphql/admin-queries';
+import { GET_ADMIN_STATS, GET_REPORTS, GET_USERS_FOR_MANAGEMENT, GET_ACTIVITY_REPORT, RESOLVE_REPORT, DISMISS_REPORT, TOGGLE_USER_STATUS, UPDATE_USER_ROLE, DELETE_USER, GET_ALL_REQUESTS_FOR_ADMIN, ADMIN_CANCEL_REQUEST, ADMIN_PUT_REQUEST_ON_STANDBY, ADMIN_REQUEST_IMPROVEMENT, ADMIN_DELETE_REQUEST, ADMIN_REOPEN_REQUEST } from '@/lib/graphql/admin-queries';
 import { useToast } from '@/components/ui/use-toast';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
 
@@ -44,6 +44,11 @@ export default function AdminPage() {
 
   const { data: activityData, loading: activityLoading } = useQuery(GET_ACTIVITY_REPORT, {
     variables: { days: activityDays },
+    skip: !currentUser || currentUser.role !== 'ADMIN',
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const { data: requestsData, loading: requestsLoading, refetch: refetchRequests } = useQuery(GET_ALL_REQUESTS_FOR_ADMIN, {
     skip: !currentUser || currentUser.role !== 'ADMIN',
     fetchPolicy: 'cache-and-network',
   });
@@ -93,6 +98,61 @@ export default function AdminPage() {
     },
     onError: (error) => {
       toast({ title: 'Erro ao alterar função do utilizador', description: error.message, variant: 'destructive' });
+    }
+  });
+
+  const [adminCancelRequest] = useMutation(ADMIN_CANCEL_REQUEST, {
+    onCompleted: () => {
+      toast({ title: 'Pedido cancelado com sucesso!' });
+      refetchRequests();
+      refetchStats();
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao cancelar pedido', description: error.message, variant: 'destructive' });
+    }
+  });
+
+  const [adminPutRequestOnStandby] = useMutation(ADMIN_PUT_REQUEST_ON_STANDBY, {
+    onCompleted: () => {
+      toast({ title: 'Pedido pausado com sucesso!' });
+      refetchRequests();
+      refetchStats();
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao pausar pedido', description: error.message, variant: 'destructive' });
+    }
+  });
+
+  const [adminRequestImprovement] = useMutation(ADMIN_REQUEST_IMPROVEMENT, {
+    onCompleted: () => {
+      toast({ title: 'Solicitação de melhoria enviada!' });
+      refetchRequests();
+      refetchStats();
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao solicitar melhoria', description: error.message, variant: 'destructive' });
+    }
+  });
+
+  const [adminDeleteRequest] = useMutation(ADMIN_DELETE_REQUEST, {
+    onCompleted: () => {
+      toast({ title: 'Pedido eliminado com sucesso!' });
+      refetchRequests();
+      refetchStats();
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao eliminar pedido', description: error.message, variant: 'destructive' });
+    }
+  });
+
+  const [adminReopenRequest] = useMutation(ADMIN_REOPEN_REQUEST, {
+    onCompleted: () => {
+      toast({ title: 'Pedido reaberto com sucesso!' });
+      refetchRequests();
+      refetchStats();
+    },
+    onError: (error) => {
+      toast({ title: 'Erro ao reabrir pedido', description: error.message, variant: 'destructive' });
     }
   });
 
@@ -173,9 +233,10 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="dashboard" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="reports">Denúncias</TabsTrigger>
+          <TabsTrigger value="requests">Pedidos</TabsTrigger>
           <TabsTrigger value="users">Utilizadores</TabsTrigger>
           <TabsTrigger value="activity">Atividade</TabsTrigger>
           <TabsTrigger value="system">Sistema</TabsTrigger>
@@ -712,6 +773,221 @@ export default function AdminPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="requests" className="space-y-6">
+          {/* Requests Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="w-5 h-5 text-blue-600" />
+                <span>Gestão de Pedidos</span>
+              </CardTitle>
+              <CardDescription>
+                Visualize e gerencie todos os pedidos da plataforma
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {requestsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Summary Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {requestsData?.getAllRequestsForAdmin?.length || 0}
+                      </div>
+                      <div className="text-sm text-blue-700">Total de Pedidos</div>
+                    </div>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-green-600">
+                        {requestsData?.getAllRequestsForAdmin?.filter((r: any) => r.status === 'OPEN').length || 0}
+                      </div>
+                      <div className="text-sm text-green-700">Abertos</div>
+                    </div>
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-orange-600">
+                        {requestsData?.getAllRequestsForAdmin?.filter((r: any) => r.status === 'IN_PROGRESS').length || 0}
+                      </div>
+                      <div className="text-sm text-orange-700">Em Progresso</div>
+                    </div>
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-purple-600">
+                        {requestsData?.getAllRequestsForAdmin?.filter((r: any) => ['STANDBY', 'REQUIRES_IMPROVEMENT'].includes(r.status)).length || 0}
+                      </div>
+                      <div className="text-sm text-purple-700">Requerem Ação</div>
+                    </div>
+                  </div>
+
+                  {/* Requests Table */}
+                  <div className="border rounded-lg overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pedido</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Criador</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Candidaturas</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Criado</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {requestsData?.getAllRequestsForAdmin?.map((request: any) => (
+                            <tr key={request.id} className="hover:bg-gray-50">
+                              <td className="px-4 py-3">
+                                <div>
+                                  <div className="font-medium text-gray-900 truncate max-w-[200px]">
+                                    {request.title}
+                                  </div>
+                                  <div className="text-sm text-gray-500">{request.category}</div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex items-center space-x-2">
+                                  <GoogleAvatar
+                                    src={request.requester?.avatarUrl}
+                                    alt={request.requester?.name}
+                                    fallback={request.requester?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                                    className="h-8 w-8"
+                                  />
+                                  <div>
+                                    <div className="text-sm font-medium text-gray-900">{request.requester?.name}</div>
+                                    <div className="text-xs text-gray-500">{request.requester?.email}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <Badge variant={
+                                  request.status === 'OPEN' ? 'default' :
+                                  request.status === 'IN_PROGRESS' ? 'secondary' :
+                                  request.status === 'DONE' ? 'success' :
+                                  request.status === 'CANCELLED' ? 'destructive' :
+                                  request.status === 'STANDBY' ? 'warning' :
+                                  request.status === 'REQUIRES_IMPROVEMENT' ? 'outline' : 'secondary'
+                                }>
+                                  {request.status === 'OPEN' && 'Aberto'}
+                                  {request.status === 'IN_PROGRESS' && 'Em Progresso'}
+                                  {request.status === 'DONE' && 'Concluído'}
+                                  {request.status === 'CANCELLED' && 'Cancelado'}
+                                  {request.status === 'STANDBY' && 'Em Pausa'}
+                                  {request.status === 'REQUIRES_IMPROVEMENT' && 'Requer Melhorias'}
+                                </Badge>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex items-center space-x-1">
+                                  <Users className="w-4 h-4 text-gray-400" />
+                                  <span className="text-sm text-gray-600">{request._count?.applications || 0}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="text-sm text-gray-600">
+                                  {new Date(request.createdAt).toLocaleDateString('pt-PT')}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                      onClick={() => window.open(`/requests/${request.id}`, '_blank')}
+                                    >
+                                      <Eye className="w-4 h-4 mr-2" />
+                                      Ver Detalhes
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    {request.status !== 'STANDBY' && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          const notes = prompt('Notas para o utilizador (opcional):');
+                                          if (notes !== null) {
+                                            adminPutRequestOnStandby({ variables: { requestId: request.id, adminNotes: notes || undefined }});
+                                          }
+                                        }}
+                                      >
+                                        <Pause className="w-4 h-4 mr-2" />
+                                        Pausar
+                                      </DropdownMenuItem>
+                                    )}
+                                    {['STANDBY', 'CANCELLED', 'REQUIRES_IMPROVEMENT'].includes(request.status) && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          const notes = prompt('Notas para o utilizador (opcional):');
+                                          if (notes !== null) {
+                                            adminReopenRequest({ variables: { requestId: request.id, adminNotes: notes || undefined }});
+                                          }
+                                        }}
+                                      >
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                        Reabrir Pedido
+                                      </DropdownMenuItem>
+                                    )}
+                                    {request.status !== 'REQUIRES_IMPROVEMENT' && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          const notes = prompt('Que melhorias são necessárias?');
+                                          if (notes !== null && notes.trim()) {
+                                            adminRequestImprovement({ variables: { requestId: request.id, adminNotes: notes }});
+                                          }
+                                        }}
+                                      >
+                                        <Edit className="w-4 h-4 mr-2" />
+                                        Solicitar Melhorias
+                                      </DropdownMenuItem>
+                                    )}
+                                    {request.status !== 'CANCELLED' && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          const notes = prompt('Motivo do cancelamento:');
+                                          if (notes !== null && notes.trim()) {
+                                            adminCancelRequest({ variables: { requestId: request.id, adminNotes: notes }});
+                                          }
+                                        }}
+                                      >
+                                        <Ban className="w-4 h-4 mr-2" />
+                                        Cancelar
+                                      </DropdownMenuItem>
+                                    )}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      className="text-red-600"
+                                      onClick={() => {
+                                        if (confirm('Tem certeza que deseja eliminar este pedido? Esta ação não pode ser desfeita.')) {
+                                          adminDeleteRequest({ variables: { requestId: request.id }});
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4 mr-2" />
+                                      Eliminar
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {(!requestsData?.getAllRequestsForAdmin || requestsData.getAllRequestsForAdmin.length === 0) && (
+                    <div className="text-center py-8 text-gray-500">
+                      <FileText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                      <p>Nenhum pedido encontrado</p>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>

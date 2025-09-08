@@ -54,6 +54,80 @@ export class RequestsResolver {
     return this.requestsService.updateStatus(id, status, user.id);
   }
 
+  // Admin mutations
+  @Query(() => [Request])
+  @UseGuards(GqlAuthGuard)
+  getAllRequestsForAdmin(@CurrentUser() user: any) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.getAllRequestsForAdmin();
+  }
+
+  @Mutation(() => Request)
+  @UseGuards(GqlAuthGuard)
+  adminCancelRequest(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.adminCancelRequest(requestId, adminNotes);
+  }
+
+  @Mutation(() => Request)
+  @UseGuards(GqlAuthGuard)
+  adminPutRequestOnStandby(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.adminPutRequestOnStandby(requestId, adminNotes);
+  }
+
+  @Mutation(() => Request)
+  @UseGuards(GqlAuthGuard)
+  adminRequestImprovement(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.adminRequestImprovement(requestId, adminNotes);
+  }
+
+  @Mutation(() => Request)
+  @UseGuards(GqlAuthGuard)
+  adminReopenRequest(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+    @Args('adminNotes', { nullable: true }) adminNotes?: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.adminReopenRequest(requestId, adminNotes);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
+  adminDeleteRequest(
+    @CurrentUser() user: any,
+    @Args('requestId') requestId: string,
+  ) {
+    if (user.role !== 'ADMIN') {
+      throw new Error('Access denied. Admin role required.');
+    }
+    return this.requestsService.adminDeleteRequest(requestId);
+  }
+
   // Optimized field resolvers with DataLoader
   @ResolveField()
   async requester(@Parent() request: Request) {

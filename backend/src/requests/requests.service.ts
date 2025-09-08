@@ -280,4 +280,163 @@ export class RequestsService {
 
     return updatedRequest;
   }
+
+  // Admin methods
+  async getAllRequestsForAdmin() {
+    return this.prisma.request.findMany({
+      include: {
+        requester: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+            ratingAvg: true,
+          },
+        },
+        applications: {
+          include: {
+            helper: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+                ratingAvg: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            applications: true,
+            messages: true,
+            reviews: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async adminUpdateRequestStatus(requestId: string, status: RequestStatus, adminNotes?: string) {
+    const request = await this.prisma.request.findUnique({
+      where: { id: requestId },
+      include: {
+        requester: { select: { id: true, name: true } },
+        applications: {
+          where: { status: 'ACCEPTED' },
+          include: { helper: { select: { id: true } } },
+        },
+      },
+    });
+
+    if (!request) {
+      throw new BadRequestException('Pedido não encontrado');
+    }
+
+    const updatedRequest = await this.prisma.request.update({
+      where: { id: requestId },
+      data: { 
+        status,
+        // Se tivermos notas admin, podemos adicionar ao updatedAt ou criar um campo separado
+        updatedAt: new Date(),
+      },
+    });
+
+    // Notificar o criador do pedido sobre a mudança de status pelo admin
+    await this.notificationsService.create({
+      userId: request.requester.id,
+      type: 'REQUEST_STATUS_CHANGED',
+      title: 'Status do pedido alterado',
+      message: `O administrador alterou o status do seu pedido "${request.title}" para ${this.getStatusDisplayName(status)}${adminNotes ? `: ${adminNotes}` : ''}`,
+      data: { requestId, oldStatus: request.status, newStatus: status, adminNotes },
+    });
+
+    // Se há helper aceite, também notificar
+    const acceptedHelper = request.applications.find(app => app.status === 'ACCEPTED');
+    if (acceptedHelper) {
+      await this.notificationsService.create({
+        userId: acceptedHelper.helper.id,
+        type: 'REQUEST_STATUS_CHANGED',
+        title: 'Status do pedido alterado',
+        message: `O administrador alterou o status do pedido "${request.title}" para ${this.getStatusDisplayName(status)}${adminNotes ? `: ${adminNotes}` : ''}`,
+        data: { requestId, oldStatus: request.status, newStatus: status, adminNotes },
+      });
+    }
+
+    return updatedRequest;
+  }
+
+  async adminCancelRequest(requestId: string, adminNotes?: string) {
+    return this.adminUpdateRequestStatus(requestId, 'CANCELLED' as RequestStatus, adminNotes);
+  }
+
+  async adminPutRequestOnStandby(requestId: string, adminNotes?: string) {
+    return this.adminUpdateRequestStatus(requestId, 'STANDBY' as RequestStatus, adminNotes);
+  }
+
+  async adminRequestImprovement(requestId: string, adminNotes?: string) {
+    return this.adminUpdateRequestStatus(requestId, 'REQUIRES_IMPROVEMENT' as RequestStatus, adminNotes);
+  }
+
+  async adminReopenRequest(requestId: string, adminNotes?: string) {
+    return this.adminUpdateRequestStatus(requestId, 'OPEN' as RequestStatus, adminNotes);
+  }
+
+  async adminDeleteRequest(requestId: string) {
+    const request = await this.prisma.request.findUnique({
+      where: { id: requestId },
+      include: {
+        requester: { select: { id: true, name: true } },
+        applications: true,
+        messages: true,
+        reviews: true,
+      },
+    });
+
+    if (!request) {
+      throw new BadRequestException('Pedido não encontrado');
+    }
+
+    // Notificar usuários envolvidos antes de eliminar
+    await this.notificationsService.create({
+      userId: request.requester.id,
+      type: 'REQUEST_STATUS_CHANGED',
+      title: 'Pedido removido',
+      message: `O seu pedido "${request.title}" foi removido pelo administrador`,
+      data: { requestId },
+    });
+
+    // Notificar helpers que aplicaram
+    for (const app of request.applications) {
+      await this.notificationsService.create({
+        userId: app.helperId,
+        type: 'REQUEST_STATUS_CHANGED',
+        title: 'Pedido removido',
+        message: `O pedido "${request.title}" ao qual se candidatou foi removido pelo administrador`,
+        data: { requestId },
+      });
+    }
+
+    // Eliminar o pedido (cascade vai eliminar relacionados)
+    await this.prisma.request.delete({
+      where: { id: requestId },
+    });
+
+    return true;
+  }
+
+  private getStatusDisplayName(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      OPEN: 'Aberto',
+      IN_PROGRESS: 'Em progresso',
+      DONE: 'Concluído',
+      CANCELLED: 'Cancelado',
+      STANDBY: 'Em pausa',
+      REQUIRES_IMPROVEMENT: 'Requer melhorias',
+    };
+    return statusMap[status] || status;
+  }
 }

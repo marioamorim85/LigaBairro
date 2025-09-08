@@ -94,6 +94,11 @@ type MonthlyGrowth {
 
 type Mutation {
   acceptApplication(applicationId: String!): Application!
+  adminCancelRequest(adminNotes: String, requestId: String!): Request!
+  adminDeleteRequest(requestId: String!): Boolean!
+  adminPutRequestOnStandby(adminNotes: String, requestId: String!): Request!
+  adminReopenRequest(adminNotes: String, requestId: String!): Request!
+  adminRequestImprovement(adminNotes: String, requestId: String!): Request!
   applyToRequest(input: ApplyToRequestInput!): Application!
   createRequest(input: CreateRequestInput!): Request!
   createReview(input: CreateReviewInput!): Review!
@@ -139,6 +144,7 @@ type Query {
   activityReport(days: Int! = 30): [ActivityReport!]!
   adminStats: AdminStats!
   canReview(requestId: String!, revieweeId: String!): Boolean!
+  getAllRequestsForAdmin: [Request!]!
   getUserNotifications(limit: Int! = 50, offset: Int! = 0): [Notification!]!
   me: User
   messagesByRequest(requestId: String!): [Message!]!
@@ -200,6 +206,7 @@ input ReportUserInput {
 }
 
 type Request {
+  _count: RequestCount
   applications: [Application!]
   budgetCents: Int
   category: String!
@@ -220,6 +227,12 @@ type Request {
   status: String!
   title: String!
   updatedAt: DateTime!
+}
+
+type RequestCount {
+  applications: Int!
+  messages: Int!
+  reviews: Int!
 }
 
 type Review {

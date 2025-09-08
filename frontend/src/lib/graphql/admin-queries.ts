@@ -109,3 +109,85 @@ export const DELETE_USER = gql`
   }
 `;
 
+// Request management queries
+export const GET_ALL_REQUESTS_FOR_ADMIN = gql`
+  query GetAllRequestsForAdmin {
+    getAllRequestsForAdmin {
+      id
+      title
+      description
+      category
+      status
+      isPaid
+      budgetCents
+      city
+      createdAt
+      updatedAt
+      requester {
+        id
+        name
+        email
+        avatarUrl
+        ratingAvg
+      }
+      applications {
+        id
+        status
+        helper {
+          id
+          name
+          avatarUrl
+          ratingAvg
+        }
+      }
+      _count {
+        applications
+        messages
+        reviews
+      }
+    }
+  }
+`;
+
+export const ADMIN_CANCEL_REQUEST = gql`
+  mutation AdminCancelRequest($requestId: String!, $adminNotes: String) {
+    adminCancelRequest(requestId: $requestId, adminNotes: $adminNotes) {
+      id
+      status
+    }
+  }
+`;
+
+export const ADMIN_PUT_REQUEST_ON_STANDBY = gql`
+  mutation AdminPutRequestOnStandby($requestId: String!, $adminNotes: String) {
+    adminPutRequestOnStandby(requestId: $requestId, adminNotes: $adminNotes) {
+      id
+      status
+    }
+  }
+`;
+
+export const ADMIN_REQUEST_IMPROVEMENT = gql`
+  mutation AdminRequestImprovement($requestId: String!, $adminNotes: String) {
+    adminRequestImprovement(requestId: $requestId, adminNotes: $adminNotes) {
+      id
+      status
+    }
+  }
+`;
+
+export const ADMIN_REOPEN_REQUEST = gql`
+  mutation AdminReopenRequest($requestId: String!, $adminNotes: String) {
+    adminReopenRequest(requestId: $requestId, adminNotes: $adminNotes) {
+      id
+      status
+    }
+  }
+`;
+
+export const ADMIN_DELETE_REQUEST = gql`
+  mutation AdminDeleteRequest($requestId: String!) {
+    adminDeleteRequest(requestId: $requestId)
+  }
+`;
+

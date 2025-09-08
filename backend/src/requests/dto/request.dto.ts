@@ -25,6 +25,20 @@ export enum RequestStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',
   CANCELLED = 'CANCELLED',
+  STANDBY = 'STANDBY',
+  REQUIRES_IMPROVEMENT = 'REQUIRES_IMPROVEMENT',
+}
+
+@ObjectType()
+class RequestCount {
+  @Field(() => Int)
+  applications: number;
+
+  @Field(() => Int)
+  messages: number;
+
+  @Field(() => Int)
+  reviews: number;
 }
 
 @InputType()
@@ -225,4 +239,7 @@ export class Request {
 
   @Field(() => [Message], { nullable: true })
   messages?: Message[];
+
+  @Field(() => RequestCount, { nullable: true })
+  _count?: RequestCount;
 }

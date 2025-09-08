@@ -27,7 +27,8 @@
       "Bash(timeout 10s npm run start:dev)",
       "Bash(npx prisma migrate dev:*)",
       "Bash(PORT=3000 npm run dev)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "ask": []

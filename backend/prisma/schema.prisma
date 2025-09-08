@@ -31,6 +31,8 @@ model User {
   reviewsGiven      Review[] @relation("ReviewsGiven")
   reviewsRecv       Review[] @relation("ReviewsRecv")
   notifications     Notification[]
+  reportsGiven      Report[] @relation("ReportsGiven")
+  reportsReceived   Report[] @relation("ReportsReceived")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -79,6 +81,7 @@ model Request {
   applications  Application[]
   messages      Message[]
   reviews       Review[]
+  reports       Report[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -90,6 +93,8 @@ enum RequestStatus {
   IN_PROGRESS
   DONE
   CANCELLED
+  STANDBY
+  REQUIRES_IMPROVEMENT
 }
 
 model Application {
@@ -144,9 +149,12 @@ model Report {
   targetUserId  String?
   requestId     String?
   reason        String   @db.Text
-  status        String   @default("OPEN")
+  status        String   @default("PENDING")
   adminNotes    String?  @db.Text
   createdAt     DateTime @default(now())
+  reporter      User     @relation("ReportsGiven", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetUser    User?    @relation("ReportsReceived", fields: [targetUserId], references: [id], onDelete: Cascade)
+  request       Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   @@map("reports")
 }

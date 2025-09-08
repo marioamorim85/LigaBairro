@@ -27,6 +27,95 @@ export class ReportsService {
 
   async findAll() {
     return this.prisma.report.findMany({
+      include: {
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+          },
+        },
+        targetUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+            isActive: true,
+          },
+        },
+        request: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            requester: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getReportStats() {
+    const [totalReports, pendingReports, resolvedReports, dismissedReports] = await Promise.all([
+      this.prisma.report.count(),
+      this.prisma.report.count({ where: { status: 'PENDING' } }),
+      this.prisma.report.count({ where: { status: 'RESOLVED' } }),
+      this.prisma.report.count({ where: { status: 'DISMISSED' } }),
+    ]);
+
+    return {
+      totalReports,
+      pendingReports,
+      resolvedReports,
+      dismissedReports,
+    };
+  }
+
+  async getReportsByStatus(status: string) {
+    return this.prisma.report.findMany({
+      where: { status },
+      include: {
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+          },
+        },
+        targetUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+            isActive: true,
+          },
+        },
+        request: {
+          select: {
+            id: true,
+            title: true,
+            status: true,
+            requester: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },
