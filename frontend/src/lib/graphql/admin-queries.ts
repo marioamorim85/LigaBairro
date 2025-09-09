@@ -45,6 +45,32 @@ export const GET_REPORTS = gql`
       targetUserId
       requestId
       adminNotes
+      reporter {
+        id
+        name
+        email
+        avatarUrl
+      }
+      targetUser {
+        id
+        name
+        email
+        avatarUrl
+        ratingAvg
+        isActive
+      }
+      request {
+        id
+        title
+        description
+        category
+        status
+        requester {
+          id
+          name
+          avatarUrl
+        }
+      }
     }
   }
 `;

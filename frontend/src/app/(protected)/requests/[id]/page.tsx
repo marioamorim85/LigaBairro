@@ -20,6 +20,7 @@ import { RatingDisplay } from '@/components/rating-stars';
 import { ReviewDialog } from '@/components/review-dialog';
 import { CompletedReview } from '@/components/completed-review';
 import { PublicReviews } from '@/components/public-reviews';
+import { ReportDialog } from '@/components/report/report-dialog';
 import { 
   MapPin, 
   Clock, 
@@ -32,7 +33,8 @@ import {
   Edit,
   X,
   Settings,
-  Star
+  Star,
+  Flag
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -328,6 +330,23 @@ export default function RequestDetailPage() {
             <div className="flex items-center space-x-3">
               <h1 className="text-2xl font-bold text-gray-900">{request.title}</h1>
               {getStatusBadge(request.status)}
+              {/* Report Request Button - only show if not owner */}
+              {!isOwner && (
+                <ReportDialog 
+                  type="request"
+                  targetId={request.id}
+                  targetName={request.title}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
+                    title="Denunciar pedido"
+                  >
+                    <Flag className="h-4 w-4" />
+                  </Button>
+                </ReportDialog>
+              )}
             </div>
             
             {/* Owner actions */}
@@ -494,7 +513,24 @@ export default function RequestDetailPage() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <p className="font-medium">{application.helper.name}</p>
+                          <div className="flex items-center space-x-2">
+                            <p className="font-medium">{application.helper.name}</p>
+                            {/* Report User Button */}
+                            <ReportDialog 
+                              type="user"
+                              targetId={application.helper.id}
+                              targetName={application.helper.name}
+                            >
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                                title="Denunciar utilizador"
+                              >
+                                <Flag className="h-3 w-3" />
+                              </Button>
+                            </ReportDialog>
+                          </div>
                           {application.helper.ratingAvg > 0 && (
                             <p className="text-sm text-yellow-600">
                               ★ {application.helper.ratingAvg.toFixed(1)}
@@ -575,15 +611,34 @@ export default function RequestDetailPage() {
                   fallback={request.requester.name.split(' ').map((n: string) => n[0]).join('')}
                   className="w-12 h-12"
                 />
-                <div>
-                  <p className="font-medium">{request.requester.name}</p>
-                  {request.requester.ratingAvg > 0 && (
-                    <RatingDisplay 
-                      rating={request.requester.ratingAvg} 
-                      size="sm"
-                      showCount={false}
-                    />
-                  )}
+                <div className="flex-1">
+                  <div className="space-y-2">
+                    <p className="font-medium">{request.requester.name}</p>
+                    {request.requester.ratingAvg > 0 && (
+                      <RatingDisplay 
+                        rating={request.requester.ratingAvg} 
+                        size="sm"
+                        showCount={false}
+                      />
+                    )}
+                    {/* Report User Button - only show if not owner */}
+                    {!isOwner && (
+                      <ReportDialog 
+                        type="user"
+                        targetId={request.requester.id}
+                        targetName={request.requester.name}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-auto p-1 text-gray-500 hover:text-red-600 text-xs"
+                        >
+                          <Flag className="w-3 h-3 mr-1" />
+                          Denunciar
+                        </Button>
+                      </ReportDialog>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -679,8 +734,29 @@ export default function RequestDetailPage() {
                       alt={acceptedApplication.helper.name}
                       fallback={acceptedApplication.helper.name.split(' ').map((n: string) => n[0]).join('')}
                     />
-                    <div>
-                      <p className="font-medium">{acceptedApplication.helper.name}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <p className="font-medium">{acceptedApplication.helper.name}</p>
+                          {/* Report User Button - only show if not the accepted helper */}
+                          {!isAcceptedHelper && (
+                            <ReportDialog 
+                              type="user"
+                              targetId={acceptedApplication.helper.id}
+                              targetName={acceptedApplication.helper.name}
+                            >
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                                title="Denunciar utilizador"
+                              >
+                                <Flag className="h-3 w-3" />
+                              </Button>
+                            </ReportDialog>
+                          )}
+                        </div>
+                      </div>
                       {acceptedApplication.helper.ratingAvg > 0 && (
                         <RatingDisplay 
                           rating={acceptedApplication.helper.ratingAvg} 

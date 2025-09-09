@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -135,6 +136,9 @@ export function ReportDialog({ type, targetId, targetName, triggerButton }: Repo
             <AlertTriangle className="w-5 h-5 text-red-600" />
             <span>Denunciar {type === 'user' ? 'utilizador' : 'pedido'}</span>
           </DialogTitle>
+          <DialogDescription>
+            Formulário para denunciar {type === 'user' ? 'um utilizador' : 'um pedido'} por comportamento inadequado
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

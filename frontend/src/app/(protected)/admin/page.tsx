@@ -10,9 +10,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, AlertTriangle, Users, MessageSquare, TrendingUp, Database, Star, Settings, CheckCircle, XCircle, Calendar, Activity, BarChart3, Lock, Unlock, MoreHorizontal, UserPlus, UserMinus, Trash2, FileText, Pause, Edit, Timer, Ban, Eye } from 'lucide-react';
+import { Shield, AlertTriangle, Users, MessageSquare, TrendingUp, Database, Star, Settings, CheckCircle, XCircle, Calendar, Activity, BarChart3, Lock, Unlock, MoreHorizontal, UserPlus, UserMinus, Trash2, FileText, Pause, Edit, Timer, Ban, Eye, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { GET_ADMIN_STATS, GET_REPORTS, GET_USERS_FOR_MANAGEMENT, GET_ACTIVITY_REPORT, RESOLVE_REPORT, DISMISS_REPORT, TOGGLE_USER_STATUS, UPDATE_USER_ROLE, DELETE_USER, GET_ALL_REQUESTS_FOR_ADMIN, ADMIN_CANCEL_REQUEST, ADMIN_PUT_REQUEST_ON_STANDBY, ADMIN_REQUEST_IMPROVEMENT, ADMIN_DELETE_REQUEST, ADMIN_REOPEN_REQUEST } from '@/lib/graphql/admin-queries';
 import { useToast } from '@/components/ui/use-toast';
 import { GoogleAvatar } from '@/components/ui/google-avatar';
@@ -26,15 +27,32 @@ export default function AdminPage() {
   const [activityDays, setActivityDays] = useState<number>(30);
   const [userToDelete, setUserToDelete] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isResolveDialogOpen, setIsResolveDialogOpen] = useState(false);
+  const [isDismissDialogOpen, setIsDismissDialogOpen] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+
+  // Controlar polling baseado na visibilidade da página
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   const { data: statsData, loading: statsLoading, refetch: refetchStats } = useQuery(GET_ADMIN_STATS, {
     skip: !currentUser || currentUser.role !== 'ADMIN',
     fetchPolicy: 'cache-and-network',
+    pollInterval: isPageVisible ? 15000 : 0, // Polling apenas quando página visível
+    errorPolicy: 'all',
   });
 
   const { data: reportsData, loading: reportsLoading, refetch: refetchReports } = useQuery(GET_REPORTS, {
     skip: !currentUser || currentUser.role !== 'ADMIN',
     fetchPolicy: 'cache-and-network',
+    pollInterval: isPageVisible ? 10000 : 0, // Polling apenas quando página visível
+    errorPolicy: 'all',
   });
 
   const { data: usersData, loading: usersLoading, refetch: refetchUsers } = useQuery(GET_USERS_FOR_MANAGEMENT, {
@@ -55,12 +73,32 @@ export default function AdminPage() {
 
   const [resolveReport] = useMutation(RESOLVE_REPORT, {
     onCompleted: () => {
-      toast({ title: 'Denúncia resolvida com sucesso!' });
+      // Mensagem baseada na ação tomada
+      let toastMessage = 'Denúncia resolvida com sucesso!';
+      switch (reportAction) {
+        case 'WARNING':
+          toastMessage = 'Aviso enviado ao utilizador com sucesso!';
+          break;
+        case 'BLOCK_USER':
+          toastMessage = 'Utilizador bloqueado com sucesso!';
+          break;
+        case 'REMOVE_REQUEST':
+          toastMessage = 'Pedido removido com sucesso!';
+          break;
+        case 'NO_ACTION':
+          toastMessage = 'Denúncia resolvida - nenhuma ação necessária!';
+          break;
+        default:
+          toastMessage = 'Denúncia resolvida com sucesso!';
+      }
+      
+      toast({ title: toastMessage });
       refetchReports();
       refetchStats();
       setSelectedReport(null);
       setReportAction('');
       setAdminNotes('');
+      setIsResolveDialogOpen(false);
     },
     onError: (error) => {
       toast({ title: 'Erro ao resolver denúncia', description: error.message, variant: 'destructive' });
@@ -74,6 +112,7 @@ export default function AdminPage() {
       refetchStats();
       setSelectedReport(null);
       setAdminNotes('');
+      setIsDismissDialogOpen(false);
     },
     onError: (error) => {
       toast({ title: 'Erro ao rejeitar denúncia', description: error.message, variant: 'destructive' });
@@ -243,12 +282,27 @@ export default function AdminPage() {
         </TabsList>
 
         <TabsContent value="dashboard" className="space-y-6">
-          {/* Executive Summary */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Resumo Executivo</h2>
-              <Badge className="bg-blue-500">Hoje</Badge>
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+                <p className="text-gray-600">Visão geral das estatísticas da plataforma</p>
+              </div>
             </div>
+            <Badge className="bg-blue-500">Atualizado</Badge>
+          </div>
+
+          {/* Executive Summary */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Resumo Executivo</CardTitle>
+              <CardDescription>Atividade registada nas últimas 24 horas</CardDescription>
+            </CardHeader>
+            <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">{stats?.recentActivity?.newUsers || 0}</div>
@@ -267,7 +321,8 @@ export default function AdminPage() {
                 <div className="text-sm text-gray-600">Mensagens hoje</div>
               </div>
             </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Alerts Section */}
           {(stats?.pendingReports > 0 || stats?.activeRequests > 10) && (
@@ -613,6 +668,34 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="reports" className="space-y-6">
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Gestão de Denúncias</h2>
+                <p className="text-gray-600">{reports.length} denúncia{reports.length !== 1 ? 's' : ''} registada{reports.length !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Badge variant={reports.filter(r => r.status === 'PENDING').length > 0 ? 'destructive' : 'secondary'}>
+                {reports.filter(r => r.status === 'PENDING').length} pendente{reports.filter(r => r.status === 'PENDING').length !== 1 ? 's' : ''}
+              </Badge>
+              {reportsLoading && (
+                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span>Atualizando...</span>
+                </div>
+              )}
+              <div className="flex items-center space-x-1 text-xs text-gray-400">
+                <Activity className="w-3 h-3" />
+                <span>Auto-atualização ativa</span>
+              </div>
+            </div>
+          </div>
+
           {/* Reports Management */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -670,6 +753,39 @@ export default function AdminPage() {
                             </Badge>
                           </div>
                           <p className="text-sm text-gray-700 mb-2">{report.details}</p>
+                          
+                          {/* Informações sobre o denunciado */}
+                          <div className="flex flex-wrap items-center gap-3 mb-2 text-xs">
+                            <div className="flex items-center space-x-1">
+                              <User className="w-3 h-3 text-gray-500" />
+                              <span className="text-gray-600">Denunciante:</span>
+                              <span className="font-medium">{report.reporter?.name || 'Anónimo'}</span>
+                            </div>
+                            
+                            {report.targetUser && (
+                              <div className="flex items-center space-x-1">
+                                <User className="w-3 h-3 text-blue-500" />
+                                <span className="text-gray-600">Utilizador:</span>
+                                <Button variant="link" size="sm" className="h-auto p-0 text-xs font-medium text-blue-600 hover:text-blue-800" asChild>
+                                  <Link href={`/profile/${report.targetUser.id}`} target="_blank">
+                                    {report.targetUser.name} ↗
+                                  </Link>
+                                </Button>
+                              </div>
+                            )}
+                            
+                            {report.request && (
+                              <div className="flex items-center space-x-1">
+                                <FileText className="w-3 h-3 text-green-500" />
+                                <span className="text-gray-600">Pedido:</span>
+                                <Button variant="link" size="sm" className="h-auto p-0 text-xs font-medium text-green-600 hover:text-green-800" asChild>
+                                  <Link href={`/requests/${report.request.id}`} target="_blank">
+                                    {report.request.title} ↗
+                                  </Link>
+                                </Button>
+                              </div>
+                            )}
+                          </div>
                           {report.adminNotes && (
                             <div className="p-2 bg-blue-50 rounded text-sm">
                               <span className="font-medium text-blue-800">Nota admin:</span> {report.adminNotes}
@@ -678,9 +794,12 @@ export default function AdminPage() {
                         </div>
                         {report.status === 'PENDING' && (
                           <div className="flex space-x-2 ml-4">
-                            <Dialog>
+                            <Dialog open={isResolveDialogOpen} onOpenChange={setIsResolveDialogOpen}>
                               <DialogTrigger asChild>
-                                <Button size="sm" onClick={() => setSelectedReport(report)}>
+                                <Button size="sm" onClick={() => {
+                                  setSelectedReport(report);
+                                  setIsResolveDialogOpen(true);
+                                }}>
                                   <CheckCircle className="w-4 h-4 mr-1" />
                                   Resolver
                                 </Button>
@@ -721,6 +840,7 @@ export default function AdminPage() {
                                     setSelectedReport(null);
                                     setReportAction('');
                                     setAdminNotes('');
+                                    setIsResolveDialogOpen(false);
                                   }}>Cancelar</Button>
                                   <Button onClick={handleResolveReport} disabled={!reportAction}>
                                     Resolver Denúncia
@@ -729,9 +849,12 @@ export default function AdminPage() {
                               </DialogContent>
                             </Dialog>
                             
-                            <Dialog>
+                            <Dialog open={isDismissDialogOpen} onOpenChange={setIsDismissDialogOpen}>
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" onClick={() => setSelectedReport(report)}>
+                                <Button variant="outline" size="sm" onClick={() => {
+                                  setSelectedReport(report);
+                                  setIsDismissDialogOpen(true);
+                                }}>
                                   <XCircle className="w-4 h-4 mr-1" />
                                   Rejeitar
                                 </Button>
@@ -757,6 +880,7 @@ export default function AdminPage() {
                                   <Button variant="outline" onClick={() => {
                                     setSelectedReport(null);
                                     setAdminNotes('');
+                                    setIsDismissDialogOpen(false);
                                   }}>Cancelar</Button>
                                   <Button variant="destructive" onClick={handleDismissReport}>
                                     Rejeitar Denúncia

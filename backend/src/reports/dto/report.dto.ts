@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType, ID } from '@nestjs/graphql';
-import { IsString, IsUUID, MinLength, MaxLength, IsIn } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsIn, IsOptional } from 'class-validator';
 
 export enum ReportReason {
   SPAM = 'SPAM',
@@ -21,7 +21,6 @@ export enum ReportReason {
 export class ReportUserInput {
   @Field()
   @IsString({ message: 'ID do usuário deve ser uma string' })
-  @IsUUID('4', { message: 'ID do usuário deve ser um UUID válido' })
   targetUserId: string;
 
   @Field()
@@ -30,6 +29,7 @@ export class ReportUserInput {
   reason: string;
 
   @Field({ nullable: true })
+  @IsOptional()
   @IsString({ message: 'Detalhes deve ser uma string' })
   @MinLength(10, { message: 'Detalhes devem ter pelo menos 10 caracteres' })
   @MaxLength(500, { message: 'Detalhes devem ter no máximo 500 caracteres' })
@@ -40,7 +40,6 @@ export class ReportUserInput {
 export class ReportRequestInput {
   @Field()
   @IsString({ message: 'ID do pedido deve ser uma string' })
-  @IsUUID('4', { message: 'ID do pedido deve ser um UUID válido' })
   requestId: string;
 
   @Field()
@@ -49,11 +48,13 @@ export class ReportRequestInput {
   reason: string;
 
   @Field({ nullable: true })
+  @IsOptional()
   @IsString({ message: 'Detalhes deve ser uma string' })
   @MinLength(10, { message: 'Detalhes devem ter pelo menos 10 caracteres' })
   @MaxLength(500, { message: 'Detalhes devem ter no máximo 500 caracteres' })
   details?: string;
 }
+
 
 @ObjectType()
 export class Report {
@@ -84,7 +85,7 @@ export class Report {
   @Field()
   createdAt: Date;
 
-  // Relations
+  // Relations will be resolved by field resolvers
   reporter?: any;
   targetUser?: any;
   request?: any;

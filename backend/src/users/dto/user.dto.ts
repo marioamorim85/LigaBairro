@@ -128,6 +128,9 @@ export class User {
   ratingAvg?: number;
 
   @Field()
+  isActive: boolean;
+
+  @Field()
   createdAt: Date;
 
   @Field()

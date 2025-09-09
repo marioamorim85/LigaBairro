@@ -4,6 +4,9 @@ import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { UsersService } from './users.service';
 import { User, UpdateUserInput, UpdateUserSkillsInput } from './dto/user.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -13,6 +16,13 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard)
   me(@CurrentUser() user: any) {
     return this.usersService.findById(user.id);
+  }
+
+  @Query(() => User, { name: 'user', nullable: true })
+  @Roles(Role.ADMIN)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  getUserById(@Args('id') id: string) {
+    return this.usersService.findById(id);
   }
 
   @Mutation(() => User)

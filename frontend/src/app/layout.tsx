@@ -4,6 +4,7 @@ import './globals.css'
 import { ApolloWrapper } from '@/lib/apollo-wrapper'
 import { AuthProvider } from '@/components/auth/auth-provider'
 import { Toaster } from '@/components/ui/toaster'
+import { Toaster as SonnerToaster } from 'sonner'
 import { ToastContainer } from '@/components/ui/toast-delight'
 import { EasterEggDetector, SecretPanel } from '@/components/ui/easter-egg'
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <AuthProvider>
             {children}
             <Toaster />
+            <SonnerToaster />
             <ToastContainer />
             <EasterEggDetector />
             <SecretPanel />

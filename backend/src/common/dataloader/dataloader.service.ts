@@ -35,8 +35,15 @@ export class DataLoaderService {
   // DataLoader for Requests by ID
   private readonly requestLoader = new DataLoader<string, any>(
     async (requestIds: readonly string[]) => {
+      // Filter out any undefined or invalid IDs
+      const validRequestIds = requestIds.filter(id => id && typeof id === 'string');
+      
+      if (validRequestIds.length === 0) {
+        return requestIds.map(() => null);
+      }
+
       const requests = await this.prisma.request.findMany({
-        where: { id: { in: [...requestIds] } },
+        where: { id: { in: [...validRequestIds] } },
         include: {
           requester: true,
           applications: {
@@ -54,7 +61,7 @@ export class DataLoaderService {
       });
 
       const requestMap = new Map(requests.map(request => [request.id, request]));
-      return requestIds.map(id => requestMap.get(id) || null);
+      return requestIds.map(id => id ? requestMap.get(id) || null : null);
     },
     {
       cache: true,

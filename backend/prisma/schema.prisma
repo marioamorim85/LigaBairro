@@ -181,4 +181,6 @@ enum NotificationType {
   NEW_MESSAGE         // Nova mensagem
   REQUEST_STATUS_CHANGED // Pedido mudou de estado
   NEW_REVIEW          // Recebeste uma review
+  ADMIN_WARNING       // Aviso administrativo
+  USER_BLOCKED        // Utilizador bloqueado
 }

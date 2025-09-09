@@ -175,12 +175,47 @@ export default function NotificationsPage() {
       case 'NEW_APPLICATION':
       case 'APPLICATION_ACCEPTED':
       case 'APPLICATION_REJECTED':
-      case 'REQUEST_STATUS_CHANGED':
-        return data.requestId ? `/requests/${data.requestId}` : null;
       case 'NEW_MESSAGE':
-        return data.requestId ? `/requests/${data.requestId}` : null;
       case 'NEW_REVIEW':
         return data.requestId ? `/requests/${data.requestId}` : null;
+      
+      case 'REQUEST_STATUS_CHANGED':
+        // Para remoções de pedidos
+        if (data.action === 'REMOVED') {
+          return null; // Pedido foi removido, não há link válido
+        }
+        
+        // Para denúncias de pedidos - sempre tentar ir para o anúncio
+        if (data.targetType === 'REQUEST' && data.requestId) {
+          return `/requests/${data.requestId}`;
+        }
+        
+        // Para denúncias de utilizador - ir para o perfil denunciado (se for denúncia enviada) ou próprio perfil (se foi denunciado)
+        if (data.targetType === 'USER') {
+          if (data.status === 'SUBMITTED' && data.targetId) {
+            // Se é quem fez a denúncia, vai para o perfil do denunciado
+            return `/profile/${data.targetId}`;
+          } else {
+            // Se é quem foi denunciado, vai para o próprio perfil
+            return '/profile';
+          }
+        }
+        
+        // Fallback: se há requestId, vai para o anúncio
+        if (data.requestId) {
+          return `/requests/${data.requestId}`;
+        }
+        
+        return null;
+        
+      case 'ADMIN_WARNING':
+        // Se o aviso é sobre um pedido específico, vai para o pedido
+        if (data.targetType === 'REQUEST' && data.requestId) {
+          return `/requests/${data.requestId}`;
+        }
+        // Senão, vai para o perfil próprio do utilizador
+        return '/profile';
+        
       default:
         return null;
     }

@@ -154,14 +154,30 @@ export const CREATE_REVIEW = gql`
 `;
 
 export const REPORT_USER = gql`
-  mutation ReportUser($targetUserId: ID!, $reason: String!) {
-    reportUser(targetUserId: $targetUserId, reason: $reason)
+  mutation ReportUser($input: ReportUserInput!) {
+    reportUser(input: $input) {
+      id
+      reporterId
+      targetUserId
+      reason
+      details
+      status
+      createdAt
+    }
   }
 `;
 
 export const REPORT_REQUEST = gql`
-  mutation ReportRequest($requestId: ID!, $reason: String!) {
-    reportRequest(requestId: $requestId, reason: $reason)
+  mutation ReportRequest($input: ReportRequestInput!) {
+    reportRequest(input: $input) {
+      id
+      reporterId
+      requestId
+      reason
+      details
+      status
+      createdAt
+    }
   }
 `;
 

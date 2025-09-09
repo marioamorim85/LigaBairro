@@ -195,3 +195,26 @@ export const GET_REQUEST_REVIEWS = gql`
     }
   }
 `;
+
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String!) {
+    user(id: $id) {
+      id
+      name
+      email
+      avatarUrl
+      city
+      lat
+      lng
+      bio
+      role
+      ratingAvg
+      skills {
+        skill {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
