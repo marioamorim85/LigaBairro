@@ -3,8 +3,8 @@
 import { useEffect, useState, useRef } from 'react';
 
 // Mozelos coordinates and operational area
-const MOZELOS_CENTER = { lat: 40.9735, lng: -8.5480 };
-const MOZELOS_RADIUS_KM = 7;
+const MOZELOS_CENTER = { lat: 40.999, lng: -8.556 };
+const MOZELOS_RADIUS_KM = 1.5;
 
 interface WorkingMapPickerProps {
   onLocationSelect: (location: { lat: number; lng: number } | null) => void;

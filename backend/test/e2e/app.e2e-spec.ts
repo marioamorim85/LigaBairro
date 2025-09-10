@@ -164,9 +164,9 @@ describe('PorPerto E2E', () => {
     });
 
     it('should have proper geographic coordinates for Mozelos', async () => {
-      const MOZELOS_CENTER_LAT = 40.9735;
-      const MOZELOS_CENTER_LNG = -8.5480;
-      const MOZELOS_RADIUS_KM = 7;
+      const MOZELOS_CENTER_LAT = 40.999;
+      const MOZELOS_CENTER_LNG = -8.556;
+      const MOZELOS_RADIUS_KM = 1.5;
       
       const requests = await prisma.request.findMany();
       

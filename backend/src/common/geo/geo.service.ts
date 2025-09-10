@@ -23,9 +23,9 @@ export class GeoService {
 
   constructor(private configService: ConfigService) {
     // Coordenadas mais precisas do centro de Mozelos
-    this.MOZELOS_CENTER_LAT = Number(configService.get('MOZELOS_CENTER_LAT', 40.9735));
-    this.MOZELOS_CENTER_LNG = Number(configService.get('MOZELOS_CENTER_LNG', -8.5480));
-    this.MOZELOS_RADIUS_KM = Number(configService.get('MOZELOS_RADIUS_KM', 7)); // Sincronizado com frontend
+    this.MOZELOS_CENTER_LAT = Number(configService.get('MOZELOS_CENTER_LAT', 40.999));
+    this.MOZELOS_CENTER_LNG = Number(configService.get('MOZELOS_CENTER_LNG', -8.556));
+    this.MOZELOS_RADIUS_KM = Number(configService.get('MOZELOS_RADIUS_KM', 1.5)); // Sincronizado com frontend
   }
 
   // Calculate distance using Haversine formula

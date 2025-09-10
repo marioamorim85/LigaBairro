@@ -68,8 +68,8 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-2">Para questões gerais:</p>
-                  <a href="mailto:contacto@porperto.org" className="text-blue-600 hover:text-blue-800 font-medium">
-                    contacto@porperto.org
+                  <a href="mailto:porperto.mozelos@gmail.com" className="text-blue-600 hover:text-blue-800 font-medium">
+                    porperto.mozelos@gmail.com
                   </a>
                 </CardContent>
               </Card>
@@ -83,8 +83,8 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-2">Precisa de ajuda técnica:</p>
-                  <a href="mailto:suporte@porperto.org" className="text-blue-600 hover:text-blue-800 font-medium">
-                    suporte@porperto.org
+                  <a href="mailto:porperto.mozelos@gmail.com" className="text-blue-600 hover:text-blue-800 font-medium">
+                    porperto.mozelos@gmail.com
                   </a>
                 </CardContent>
               </Card>

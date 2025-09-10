@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 // Mozelos coordinates and operational area
-const MOZELOS_CENTER = { lat: 40.9735, lng: -8.5480 };
-const MOZELOS_RADIUS_KM = 7;
+const MOZELOS_CENTER = { lat: 40.999, lng: -8.556 };
+const MOZELOS_RADIUS_KM = 1.5;
 
 // Dynamically import map components to avoid SSR issues
 const MapContainer = dynamic(
