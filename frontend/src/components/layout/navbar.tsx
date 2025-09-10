@@ -56,11 +56,14 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/requests" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
-              <div className="text-white font-bold text-sm">LB</div>
+          <Link href="/requests" className="flex items-center hover:opacity-80 transition-opacity">
+            <div className="h-12 bg-white rounded-xl flex items-center justify-center shadow-md border border-gray-200 px-3">
+              <img 
+                src="/logo.png" 
+                alt="PorPerto Logo" 
+                className="h-10 object-contain"
+              />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">LigaBairro</span>
           </Link>
 
           {/* Navigation Links */}

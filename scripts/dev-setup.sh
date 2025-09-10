@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# LigaBairro Development Setup Script
+# PorPerto Development Setup Script
 
 set -e
 
-echo "🚀 Setting up LigaBairro development environment..."
+echo "🚀 Setting up PorPerto development environment..."
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then

@@ -1,6 +1,6 @@
-# 🎉 Liga Bairro - Funcionalidades de Delight & Whimsy
+# 🎉 PorPerto - Funcionalidades de Delight & Whimsy
 
-Implementação de elementos que transformam a experiência do usuário em momentos memoráveis e divertidos, criando uma conexão emocional com a plataforma Liga Bairro.
+Implementação de elementos que transformam a experiência do usuário em momentos memoráveis e divertidos, criando uma conexão emocional com a plataforma PorPerto.
 
 ## 📦 Componentes Criados
 
@@ -117,7 +117,7 @@ celebrationToasts.firstLogin()
 - 🏠 Tema "vizinhança" em toda a aplicação
 - 🌅 Celebrações automáticas em datas especiais
 - 🎊 Marcos de progresso com confetti
-- 💖 Mensagens calorosas da comunidade de Fiães
+- 💖 Mensagens calorosas da comunidade de Mozelos
 
 ### **Acessibilidade & Performance:**
 - 🎛️ Respeita `prefers-reduced-motion`
@@ -146,7 +146,7 @@ celebrationToasts.firstLogin()
 - 🎉 Celebração de pequenas vitórias
 
 ### **Personalidade da Marca:**
-- 🏘️ Foco na comunidade local (Fiães)
+- 🏘️ Foco na comunidade local (Mozelos)
 - ❤️ Tom caloroso e acolhedor
 - 🤝 Incentivo à entreajuda
 - ✨ Tecnologia com alma humana
@@ -200,4 +200,4 @@ Cada elemento foi criado pensando em:
 - 💖 **Criar conexão emocional**
 - 🏠 **Refletir o espírito comunitário**
 
-A Liga Bairro agora tem personalidade única que a diferencia no mercado, transformando tarefas mundanas em momentos de alegria e conectando verdadeiramente a comunidade de Fiães! 🎊
+A PorPerto agora tem personalidade única que a diferencia no mercado, transformando tarefas mundanas em momentos de alegria e conectando verdadeiramente a comunidade de Mozelos! 🎊

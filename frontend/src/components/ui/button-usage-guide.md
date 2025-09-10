@@ -1,8 +1,8 @@
-# LigaBairro Button System - Usage Guide
+# PorPerto Button System - Usage Guide
 
 ## Overview
 
-The LigaBairro app features a comprehensive button system designed for rapid development, consistent UX, and delightful interactions. The system includes enhanced base buttons and specialized action buttons for common use cases.
+The PorPerto app features a comprehensive button system designed for rapid development, consistent UX, and delightful interactions. The system includes enhanced base buttons and specialized action buttons for common use cases.
 
 ## Quick Start
 

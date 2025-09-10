@@ -19,6 +19,7 @@ export class AuthService {
   ) {}
 
   async validateGoogleUser(profile: GoogleProfile) {
+    // Check by Google ID first
     const existingUser = await this.usersService.findByGoogleId(profile.id);
 
     if (existingUser) {
@@ -32,13 +33,24 @@ export class AuthService {
       });
     }
 
+    // Check if email already exists (e.g., from seed data)
+    const existingEmailUser = await this.usersService.findByEmail(profile.email);
+    if (existingEmailUser) {
+      // Link Google account to existing user
+      return this.usersService.update(existingEmailUser.id, {
+        googleId: profile.id,
+        name: profile.name,
+        avatarUrl: profile.picture,
+      });
+    }
+
     // Create new user
     return this.usersService.create({
       name: profile.name,
       email: profile.email,
       googleId: profile.id,
       avatarUrl: profile.picture,
-      city: 'Fiães', // Fixed for MVP
+      city: 'Mozelos', // Fixed for MVP
     });
   }
 

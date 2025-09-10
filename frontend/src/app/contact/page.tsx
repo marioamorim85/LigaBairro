@@ -68,8 +68,8 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-2">Para questões gerais:</p>
-                  <a href="mailto:contacto@ligabairro.pt" className="text-blue-600 hover:text-blue-800 font-medium">
-                    contacto@ligabairro.pt
+                  <a href="mailto:contacto@porperto.org" className="text-blue-600 hover:text-blue-800 font-medium">
+                    contacto@porperto.org
                   </a>
                 </CardContent>
               </Card>
@@ -83,8 +83,8 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-2">Precisa de ajuda técnica:</p>
-                  <a href="mailto:suporte@ligabairro.pt" className="text-blue-600 hover:text-blue-800 font-medium">
-                    suporte@ligabairro.pt
+                  <a href="mailto:suporte@porperto.org" className="text-blue-600 hover:text-blue-800 font-medium">
+                    suporte@porperto.org
                   </a>
                 </CardContent>
               </Card>
@@ -98,7 +98,7 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Fiães<br />
+                    Mozelos<br />
                     Santa Maria da Feira<br />
                     Portugal
                   </p>
@@ -283,7 +283,7 @@ export default function ContactPage() {
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">A plataforma é gratuita?</h4>
                     <p className="text-sm text-gray-600 mb-4">
-                      Sim, a LigaBairro é completamente gratuita para todos os utilizadores. Os pagamentos pelos serviços são acordados diretamente entre vizinhos.
+                      Sim, a PorPerto é completamente gratuita para todos os utilizadores. Os pagamentos pelos serviços são acordados diretamente entre vizinhos.
                     </p>
                   </div>
 
@@ -295,9 +295,9 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Posso usar a plataforma se não viver em Fiães?</h4>
+                    <h4 className="font-medium text-gray-900 mb-2">Posso usar a plataforma se não viver em Mozelos?</h4>
                     <p className="text-sm text-gray-600 mb-4">
-                      Por agora, a plataforma está limitada aos residentes de Fiães, mas planeamos expandir para outras comunidades no futuro.
+                      Por agora, a plataforma está limitada aos residentes de Mozelos, mas planeamos expandir para outras comunidades no futuro.
                     </p>
                   </div>
                 </div>

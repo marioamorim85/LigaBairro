@@ -26,7 +26,7 @@ export function ButtonShowcase() {
     <div className="space-y-8 p-8 max-w-6xl mx-auto">
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent">
-          LigaBairro Button System
+          PorPerto Button System
         </h1>
         <p className="text-lg text-muted-foreground">
           A comprehensive collection of buttons with delightful animations and interactions

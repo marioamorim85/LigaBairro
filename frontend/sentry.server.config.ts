@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN;
 
@@ -16,9 +17,7 @@ Sentry.init({
     return event;
   },
 
-  integrations: [
-    Sentry.nodeProfilingIntegration(),
-  ],
+  integrations: [],
 
   ignoreErrors: [
     // Ignore common server errors that are handled gracefully

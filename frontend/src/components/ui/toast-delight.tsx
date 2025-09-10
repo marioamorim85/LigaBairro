@@ -247,12 +247,12 @@ export const celebrationToasts = {
   requestCompleted: () => ({
     type: 'love' as const,
     title: 'Missão cumprida!',
-    description: 'Mais uma vez a comunidade de Fiães brilhou ⭐'
+    description: 'Mais uma vez a comunidade de Mozelos brilhou ⭐'
   }),
   
   firstLogin: () => ({
     type: 'celebration' as const,
-    title: 'Bem-vindo à família Liga Bairro!',
+    title: 'Bem-vindo à família PorPerto!',
     description: 'Prepare-se para conhecer vizinhos incríveis 🏡'
   }),
   

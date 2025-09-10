@@ -6,6 +6,8 @@ Sentry.init({
   dsn: SENTRY_DSN,
   environment: process.env.NODE_ENV,
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
   debug: process.env.NODE_ENV === 'development',
   
   beforeSend(event) {
@@ -21,8 +23,6 @@ Sentry.init({
     Sentry.replayIntegration({
       maskAllText: false,
       blockAllMedia: false,
-      sampleRate: 0.1,
-      errorSampleRate: 1.0,
     }),
   ],
 

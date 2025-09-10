@@ -8,13 +8,13 @@ interface GeoPoint {
 
 @Injectable()
 export class GeoService {
-  private readonly FIAES_CENTER_LAT: number;
-  private readonly FIAES_CENTER_LNG: number;
-  private readonly FIAES_RADIUS_KM: number;
-  private readonly FIAES_CITY = 'Fiães';
+  private readonly MOZELOS_CENTER_LAT: number;
+  private readonly MOZELOS_CENTER_LNG: number;
+  private readonly MOZELOS_RADIUS_KM: number;
+  private readonly MOZELOS_CITY = 'Mozelos';
 
-  // Limites aproximados de Fiães para validação mais rigorosa
-  private readonly FIAES_BOUNDS = {
+  // Limites aproximados de Mozelos para validação mais rigorosa
+  private readonly MOZELOS_BOUNDS = {
     north: 40.9850,   // Latitude máxima
     south: 40.9620,   // Latitude mínima  
     east: -8.5350,    // Longitude máxima (menos negativa)
@@ -22,10 +22,10 @@ export class GeoService {
   };
 
   constructor(private configService: ConfigService) {
-    // Coordenadas mais precisas do centro de Fiães
-    this.FIAES_CENTER_LAT = Number(configService.get('FIAES_CENTER_LAT', 40.9735));
-    this.FIAES_CENTER_LNG = Number(configService.get('FIAES_CENTER_LNG', -8.5480));
-    this.FIAES_RADIUS_KM = Number(configService.get('FIAES_RADIUS_KM', 7)); // Sincronizado com frontend
+    // Coordenadas mais precisas do centro de Mozelos
+    this.MOZELOS_CENTER_LAT = Number(configService.get('MOZELOS_CENTER_LAT', 40.9735));
+    this.MOZELOS_CENTER_LNG = Number(configService.get('MOZELOS_CENTER_LNG', -8.5480));
+    this.MOZELOS_RADIUS_KM = Number(configService.get('MOZELOS_RADIUS_KM', 7)); // Sincronizado com frontend
   }
 
   // Calculate distance using Haversine formula
@@ -61,14 +61,14 @@ export class GeoService {
            lng >= portugalBounds.west && lng <= portugalBounds.east;
   }
 
-  // Validate if location is within Fiães bounds
-  private isWithinFiaesBounds(lat: number, lng: number): boolean {
-    return lat >= this.FIAES_BOUNDS.south && lat <= this.FIAES_BOUNDS.north &&
-           lng >= this.FIAES_BOUNDS.west && lng <= this.FIAES_BOUNDS.east;
+  // Validate if location is within Mozelos bounds
+  private isWithinMozelosBounds(lat: number, lng: number): boolean {
+    return lat >= this.MOZELOS_BOUNDS.south && lat <= this.MOZELOS_BOUNDS.north &&
+           lng >= this.MOZELOS_BOUNDS.west && lng <= this.MOZELOS_BOUNDS.east;
   }
 
-  // Enhanced validation for Fiães location
-  validateFiaesLocation(lat: number, lng: number, city: string): void {
+  // Enhanced validation for Mozelos location
+  validateMozelosLocation(lat: number, lng: number, city: string): void {
     // Basic validation
     if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
       throw new BadRequestException('Coordenadas inválidas');
@@ -79,22 +79,22 @@ export class GeoService {
       throw new BadRequestException('Coordenadas fora de Portugal');
     }
 
-    // Force city to be Fiães in MVP
-    if (city !== this.FIAES_CITY) {
-      throw new BadRequestException(`Apenas pedidos em ${this.FIAES_CITY} são aceites no MVP`);
+    // Force city to be Mozelos in MVP
+    if (city !== this.MOZELOS_CITY) {
+      throw new BadRequestException(`Apenas pedidos em ${this.MOZELOS_CITY} são aceites no MVP`);
     }
 
     // Primary validation: distance check (circular area matching frontend map)
     const distance = this.calculateDistance(
-      this.FIAES_CENTER_LAT,
-      this.FIAES_CENTER_LNG,
+      this.MOZELOS_CENTER_LAT,
+      this.MOZELOS_CENTER_LNG,
       lat,
       lng
     );
 
-    if (distance > this.FIAES_RADIUS_KM) {
+    if (distance > this.MOZELOS_RADIUS_KM) {
       throw new BadRequestException(
-        `Localização fora dos limites de ${this.FIAES_CITY}. Por favor, seleciona uma localização dentro do raio azul no mapa (${distance.toFixed(2)}km do centro, máximo: ${this.FIAES_RADIUS_KM}km)`
+        `Localização fora dos limites de ${this.MOZELOS_CITY}. Por favor, seleciona uma localização dentro do raio azul no mapa (${distance.toFixed(2)}km do centro, máximo: ${this.MOZELOS_RADIUS_KM}km)`
       );
     }
   }
@@ -112,10 +112,10 @@ export class GeoService {
   // Get operational constraints
   getOperationalConstraints() {
     return {
-      centerLat: this.FIAES_CENTER_LAT,
-      centerLng: this.FIAES_CENTER_LNG,
-      radiusKm: this.FIAES_RADIUS_KM,
-      city: this.FIAES_CITY,
+      centerLat: this.MOZELOS_CENTER_LAT,
+      centerLng: this.MOZELOS_CENTER_LNG,
+      radiusKm: this.MOZELOS_RADIUS_KM,
+      city: this.MOZELOS_CITY,
     };
   }
 }

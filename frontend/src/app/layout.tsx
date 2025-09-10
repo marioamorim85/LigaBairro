@@ -11,8 +11,11 @@ import { EasterEggDetector, SecretPanel } from '@/components/ui/easter-egg'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'LigaBairro - Ajuda perto de ti em Fiães',
-  description: 'Plataforma que liga requerentes de pequenas tarefas a ajudantes locais em Fiães, Santa Maria da Feira',
+  title: 'PorPerto - Ajuda perto de ti em Mozelos',
+  description: 'Plataforma que liga requerentes de pequenas tarefas a ajudantes locais em Mozelos, Santa Maria da Feira',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({

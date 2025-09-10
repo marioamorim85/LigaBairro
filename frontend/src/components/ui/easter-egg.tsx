@@ -123,9 +123,9 @@ export function EasterEggDetector() {
     
     // Check for special dates
     const specialDates = [
-      { month: 12, day: 25, message: 'Feliz Natal! 🎄', description: 'Que este Natal traga muita união à comunidade de Fiães!' },
-      { month: 1, day: 1, message: 'Feliz Ano Novo! 🎊', description: 'Que 2024 seja cheio de vizinhança e solidariedade!' },
-      { month: 6, day: 24, message: 'São João! 🔥', description: 'Festa na comunidade! Vamos celebrar as tradições de Fiães!' },
+      { month: 12, day: 25, message: 'Feliz Natal! 🎄', description: 'Que este Natal traga muita união à comunidade de Mozelos!' },
+      { month: 1, day: 1, message: 'Feliz Ano Novo! 🎊', description: 'Que 2025 seja cheio de vizinhança e solidariedade!' },
+      { month: 6, day: 24, message: 'São João! 🔥', description: 'Festa na comunidade! Vamos celebrar as tradições de Mozelos!' },
       { month: 10, day: 31, message: 'Halloween! 👻', description: 'Doces ou travessuras... ou melhor, ajuda aos vizinhos!' }
     ];
     
@@ -174,7 +174,7 @@ export function SecretPanel() {
       <div className="text-xs opacity-90">
         <div>• Liga Bairro v1.0</div>
         <div>• Easter eggs descobertos: 1/5</div>
-        <div>• Feito com ❤️ em Fiães</div>
+        <div>• Feito com ❤️ em Mozelos</div>
       </div>
     </div>
   );

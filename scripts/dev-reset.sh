@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# LigaBairro Development Reset Script
+# PorPerto Development Reset Script
 
 set -e
 
-echo "🔄 Resetting LigaBairro development environment..."
+echo "🔄 Resetting PorPerto development environment..."
 
 # Stop and remove containers
 echo "🛑 Stopping containers..."
@@ -16,7 +16,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "🗑️  Removing database volume..."
     docker compose down -v
-    docker volume rm ligabairro_postgres_data 2>/dev/null || true
+    docker volume rm porperto_postgres_data 2>/dev/null || true
 fi
 
 # Remove images (optional)
@@ -24,7 +24,7 @@ read -p "Do you want to remove Docker images? (y/N): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "🗑️  Removing Docker images..."
-    docker rmi ligabairro_backend ligabairro_frontend 2>/dev/null || true
+    docker rmi porperto_backend porperto_frontend 2>/dev/null || true
 fi
 
 # Clean up Docker

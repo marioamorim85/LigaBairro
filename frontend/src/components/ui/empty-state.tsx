@@ -27,7 +27,7 @@ const emptyStateConfig = {
   'no-requests': {
     emoji: '🏠',
     title: 'Ainda não há pedidos aqui!',
-    description: 'Que tal ser o primeiro a pedir ajuda à comunidade de Fiães? Os teus vizinhos estão prontos para ajudar!',
+    description: 'Que tal ser o primeiro a pedir ajuda à comunidade de Mozelos? Os teus vizinhos estão prontos para ajudar!',
     actionLabel: 'Criar primeiro pedido',
     icon: Plus,
     colors: 'from-blue-400 to-indigo-500'
@@ -173,7 +173,7 @@ export function EmptyState({
               {/* Motivational footer */}
               <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
                 <Coffee className="w-4 h-4" />
-                Liga Bairro • Sempre aqui para ajudar
+                PorPerto • Sempre aqui para ajudar
               </p>
             </div>
           ) : null}

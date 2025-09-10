@@ -250,7 +250,7 @@ export default function AdminPage() {
   const reports = reportsData?.reports || [];
   const users = usersData?.usersForManagement || [];
   const activityReport = activityData?.activityReport || [];
-  const adminCount = users.filter(u => u.role === 'ADMIN').length;
+  const adminCount = users.filter((u: any) => u.role === 'ADMIN').length;
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -262,7 +262,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Administração</h1>
-            <p className="text-gray-600">Painel de controlo avançado do LigaBairro</p>
+            <p className="text-gray-600">Painel de controlo avançado do PorPerto</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -680,8 +680,8 @@ export default function AdminPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Badge variant={reports.filter(r => r.status === 'PENDING').length > 0 ? 'destructive' : 'secondary'}>
-                {reports.filter(r => r.status === 'PENDING').length} pendente{reports.filter(r => r.status === 'PENDING').length !== 1 ? 's' : ''}
+              <Badge variant={reports.filter((r: any) => r.status === 'PENDING').length > 0 ? 'destructive' : 'secondary'}>
+                {reports.filter((r: any) => r.status === 'PENDING').length} pendente{reports.filter((r: any) => r.status === 'PENDING').length !== 1 ? 's' : ''}
               </Badge>
               {reportsLoading && (
                 <div className="flex items-center space-x-1 text-xs text-gray-500">
@@ -689,29 +689,11 @@ export default function AdminPage() {
                   <span>Atualizando...</span>
                 </div>
               )}
-              <div className="flex items-center space-x-1 text-xs text-gray-400">
-                <Activity className="w-3 h-3" />
-                <span>Auto-atualização ativa</span>
-              </div>
             </div>
           </div>
 
           {/* Reports Management */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center">
-                  <AlertTriangle className="w-5 h-5 mr-2" />
-                  Gestão de Denúncias
-                </CardTitle>
-                <CardDescription>
-                  {reports.length} denúncia{reports.length !== 1 ? 's' : ''} no total
-                </CardDescription>
-              </div>
-              <Badge variant={reports.filter(r => r.status === 'PENDING').length > 0 ? 'destructive' : 'secondary'}>
-                {reports.filter(r => r.status === 'PENDING').length} pendente{reports.filter(r => r.status === 'PENDING').length !== 1 ? 's' : ''}
-              </Badge>
-            </CardHeader>
             <CardContent>
               {reportsLoading ? (
                 <div className="space-y-3">
@@ -904,17 +886,21 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="requests" className="space-y-6">
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <FileText className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Gestão de Pedidos</h2>
+                <p className="text-gray-600">{requestsData?.getAllRequestsForAdmin?.length || 0} pedido{(requestsData?.getAllRequestsForAdmin?.length || 0) !== 1 ? 's' : ''} na plataforma</p>
+              </div>
+            </div>
+          </div>
+          
           {/* Requests Management */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="w-5 h-5 text-blue-600" />
-                <span>Gestão de Pedidos</span>
-              </CardTitle>
-              <CardDescription>
-                Visualize e gerencie todos os pedidos da plataforma
-              </CardDescription>
-            </CardHeader>
             <CardContent>
               {requestsLoading ? (
                 <div className="flex items-center justify-center py-8">
@@ -995,7 +981,7 @@ export default function AdminPage() {
                                   request.status === 'IN_PROGRESS' ? 'secondary' :
                                   request.status === 'DONE' ? 'success' :
                                   request.status === 'CANCELLED' ? 'destructive' :
-                                  request.status === 'STANDBY' ? 'warning' :
+                                  request.status === 'STANDBY' ? 'secondary' :
                                   request.status === 'REQUIRES_IMPROVEMENT' ? 'outline' : 'secondary'
                                 }>
                                   {request.status === 'OPEN' && 'Aberto'}
@@ -1119,6 +1105,19 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="users" className="space-y-6">
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Gestão de Utilizadores</h2>
+                <p className="text-gray-600">{users.length} utilizador{users.length !== 1 ? 'es' : ''} registado{users.length !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+          </div>
+          
           {/* User Stats Summary */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="border-l-4 border-l-blue-500">
@@ -1138,7 +1137,7 @@ export default function AdminPage() {
                 <div className="flex items-center space-x-2">
                   <Shield className="w-5 h-5 text-red-600" />
                   <div>
-                    <p className="text-2xl font-bold text-red-600">{users.filter(u => u.role === 'ADMIN').length}</p>
+                    <p className="text-2xl font-bold text-red-600">{users.filter((u: any) => u.role === 'ADMIN').length}</p>
                     <p className="text-sm text-gray-600">Administradores</p>
                   </div>
                 </div>
@@ -1150,7 +1149,7 @@ export default function AdminPage() {
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="text-2xl font-bold text-green-600">{users.filter(u => u.isActive).length}</p>
+                    <p className="text-2xl font-bold text-green-600">{users.filter((u: any) => u.isActive).length}</p>
                     <p className="text-sm text-gray-600">Utilizadores Ativos</p>
                   </div>
                 </div>
@@ -1162,7 +1161,7 @@ export default function AdminPage() {
                 <div className="flex items-center space-x-2">
                   <Lock className="w-5 h-5 text-gray-600" />
                   <div>
-                    <p className="text-2xl font-bold text-gray-600">{users.filter(u => !u.isActive).length}</p>
+                    <p className="text-2xl font-bold text-gray-600">{users.filter((u: any) => !u.isActive).length}</p>
                     <p className="text-sm text-gray-600">Utilizadores Bloqueados</p>
                   </div>
                 </div>
@@ -1179,7 +1178,7 @@ export default function AdminPage() {
                     Gestão de Utilizadores
                   </CardTitle>
                   <CardDescription>
-                    {users.length} utilizadores registados • {adminCount} administradores • {users.filter(u => u.isActive).length} ativos
+                    {users.length} utilizadores registados • {adminCount} administradores • {users.filter((u: any) => u.isActive).length} ativos
                   </CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -1351,6 +1350,19 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-6">
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <Activity className="w-5 h-5 text-green-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Relatório de Atividade</h2>
+                <p className="text-gray-600">Análise dos últimos {activityDays} dias</p>
+              </div>
+            </div>
+          </div>
+          
           {/* Activity Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="border-l-4 border-l-blue-500">
@@ -1359,7 +1371,7 @@ export default function AdminPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Total Utilizadores</p>
                     <p className="text-2xl font-bold text-blue-600">
-                      {activityReport.reduce((sum, day) => sum + day.newUsers, 0)}
+                      {activityReport.reduce((sum: any, day: any) => sum + day.newUsers, 0)}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Últimos {activityDays} dias
@@ -1376,7 +1388,7 @@ export default function AdminPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Total Pedidos</p>
                     <p className="text-2xl font-bold text-green-600">
-                      {activityReport.reduce((sum, day) => sum + day.newRequests, 0)}
+                      {activityReport.reduce((sum: any, day: any) => sum + day.newRequests, 0)}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Últimos {activityDays} dias
@@ -1393,7 +1405,7 @@ export default function AdminPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Candidaturas</p>
                     <p className="text-2xl font-bold text-purple-600">
-                      {activityReport.reduce((sum, day) => sum + day.newApplications, 0)}
+                      {activityReport.reduce((sum: any, day: any) => sum + day.newApplications, 0)}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Últimos {activityDays} dias
@@ -1410,7 +1422,7 @@ export default function AdminPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Mensagens</p>
                     <p className="text-2xl font-bold text-orange-600">
-                      {activityReport.reduce((sum, day) => sum + day.totalMessages, 0)}
+                      {activityReport.reduce((sum: any, day: any) => sum + day.totalMessages, 0)}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       Últimos {activityDays} dias
@@ -1463,8 +1475,8 @@ export default function AdminPage() {
                   {/* Simple Bar Chart */}
                   <div className="relative h-64 bg-gray-50 rounded-lg p-4">
                     <div className="flex items-end justify-between h-full space-x-1">
-                      {activityReport.slice(-14).map((day, index) => {
-                        const maxValue = Math.max(...activityReport.map(d => d.newUsers + d.newRequests + d.newApplications + d.completedRequests));
+                      {activityReport.slice(-14).map((day: any, index: any) => {
+                        const maxValue = Math.max(...activityReport.map((d: any) => d.newUsers + d.newRequests + d.newApplications + d.completedRequests));
                         const totalActivity = day.newUsers + day.newRequests + day.newApplications + day.completedRequests;
                         const height = maxValue > 0 ? (totalActivity / maxValue) * 100 : 0;
                         
@@ -1667,6 +1679,19 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="system" className="space-y-6">
+          {/* Tab Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <Settings className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Configurações do Sistema</h2>
+                <p className="text-gray-600">Monitorização e configurações da plataforma</p>
+              </div>
+            </div>
+          </div>
+          
           {/* System Health Overview */}
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
@@ -1693,7 +1718,16 @@ export default function AdminPage() {
                 <div className="text-sm text-gray-600">Erros críticos</div>
               </div>
               <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-                <div className="text-2xl font-bold text-orange-600">{Math.floor(Date.now() / 86400000) % 30}</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {(() => {
+                    const launchDate = new Date('2025-09-07T00:00:00');
+                    const now = new Date();
+                    const lisbonTime = new Date(now.toLocaleString("en-US", {timeZone: "Europe/Lisbon"}));
+                    const diffTime = lisbonTime.getTime() - launchDate.getTime();
+                    const daysDiff = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+                    return daysDiff;
+                  })()}
+                </div>
                 <div className="text-sm text-gray-600">Dias de operação</div>
               </div>
             </div>
@@ -1781,7 +1815,7 @@ export default function AdminPage() {
                 <div className="grid grid-cols-1 gap-3">
                   <div className="p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
                     <p className="font-medium text-gray-700">Versão da Plataforma</p>
-                    <p className="text-lg font-semibold text-indigo-600">LigaBairro v3.0</p>
+                    <p className="text-lg font-semibold text-indigo-600">PorPerto v3.0</p>
                     <p className="text-xs text-gray-500">Admin Panel v2.1</p>
                   </div>
                   
@@ -1793,7 +1827,7 @@ export default function AdminPage() {
                   
                   <div className="p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
                     <p className="font-medium text-gray-700">Região de Serviço</p>
-                    <p className="text-lg font-semibold text-blue-600">Fiães, SMF</p>
+                    <p className="text-lg font-semibold text-blue-600">Mozelos, SMF</p>
                     <p className="text-xs text-gray-500">Raio: 7km</p>
                   </div>
                   
@@ -2029,7 +2063,7 @@ export default function AdminPage() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-4 h-4 text-blue-500" />
-                        <span>Geolocalização com restrição a 7km de Fiães</span>
+                        <span>Geolocalização com restrição a 7km de Mozelos</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-4 h-4 text-blue-500" />

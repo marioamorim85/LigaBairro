@@ -34,7 +34,14 @@
       "Bash(tail:*)",
       "Bash(git checkout:*)",
       "Bash(timeout 10s npm run dev)",
-      "Bash(timeout 30s npm run dev)"
+      "Bash(timeout 30s npm run dev)",
+      "mcp__ide__getDiagnostics",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(copy \"C:\\Users\\mario\\Downloads\\PorPerto\\PorPerto1.ico\" \"C:\\Users\\mario\\Downloads\\PorPerto\\frontend\\public\\favicon.ico\")",
+      "Read(//c/Users/mario/Downloads/**)",
+      "Bash(docker-compose:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []

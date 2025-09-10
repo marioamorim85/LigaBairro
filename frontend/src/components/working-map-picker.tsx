@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 
-// Fiães coordinates and operational area
-const FIAES_CENTER = { lat: 40.9735, lng: -8.5480 };
-const FIAES_RADIUS_KM = 7;
+// Mozelos coordinates and operational area
+const MOZELOS_CENTER = { lat: 40.9735, lng: -8.5480 };
+const MOZELOS_RADIUS_KM = 7;
 
 interface WorkingMapPickerProps {
   onLocationSelect: (location: { lat: number; lng: number } | null) => void;
@@ -54,23 +54,23 @@ export function WorkingMapPicker({ onLocationSelect, selectedLocation, readonly 
   const handleMapClick = (e: any) => {
     const { lat, lng } = e.latlng;
     
-    // Calculate distance from Fiães center using Haversine formula
+    // Calculate distance from Mozelos center using Haversine formula
     const R = 6371; // Earth's radius in kilometers
-    const dLat = toRadians(lat - FIAES_CENTER.lat);
-    const dLng = toRadians(lng - FIAES_CENTER.lng);
+    const dLat = toRadians(lat - MOZELOS_CENTER.lat);
+    const dLng = toRadians(lng - MOZELOS_CENTER.lng);
     
     const a = 
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRadians(FIAES_CENTER.lat)) * Math.cos(toRadians(lat)) *
+      Math.cos(toRadians(MOZELOS_CENTER.lat)) * Math.cos(toRadians(lat)) *
       Math.sin(dLng / 2) * Math.sin(dLng / 2);
     
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     
-    if (distance <= FIAES_RADIUS_KM) {
+    if (distance <= MOZELOS_RADIUS_KM) {
       onLocationSelect({ lat, lng });
     } else {
-      alert(`Localização fora da área operacional de Fiães (máximo ${FIAES_RADIUS_KM}km do centro)`);
+      alert(`Localização fora da área operacional de Mozelos (máximo ${MOZELOS_RADIUS_KM}km do centro)`);
       onLocationSelect(null);
     }
   };
@@ -124,7 +124,7 @@ export function WorkingMapPicker({ onLocationSelect, selectedLocation, readonly 
   return (
     <div className="h-full w-full">
       <MapContainer
-        center={[FIAES_CENTER.lat, FIAES_CENTER.lng]}
+        center={[MOZELOS_CENTER.lat, MOZELOS_CENTER.lng]}
         zoom={13}
         style={{ height: '100%', width: '100%', cursor: readonly ? 'default' : 'crosshair' }}
         className="z-0"
@@ -143,8 +143,8 @@ export function WorkingMapPicker({ onLocationSelect, selectedLocation, readonly 
         
         {/* Operational area circle */}
         <Circle
-          center={[FIAES_CENTER.lat, FIAES_CENTER.lng]}
-          radius={FIAES_RADIUS_KM * 1000} // Convert to meters
+          center={[MOZELOS_CENTER.lat, MOZELOS_CENTER.lng]}
+          radius={MOZELOS_RADIUS_KM * 1000} // Convert to meters
           fillColor="blue"
           fillOpacity={0.1}
           color="blue"
@@ -153,18 +153,18 @@ export function WorkingMapPicker({ onLocationSelect, selectedLocation, readonly 
         >
           <Popup>
             <div className="text-center">
-              <strong>Área Operacional de Fiães</strong>
+              <strong>Área Operacional de Mozelos</strong>
               <br />
-              Raio: {FIAES_RADIUS_KM}km
+              Raio: {MOZELOS_RADIUS_KM}km
             </div>
           </Popup>
         </Circle>
         
         {/* Center marker */}
-        <Marker position={[FIAES_CENTER.lat, FIAES_CENTER.lng]}>
+        <Marker position={[MOZELOS_CENTER.lat, MOZELOS_CENTER.lng]}>
           <Popup>
             <div className="text-center">
-              <strong>Centro de Fiães</strong>
+              <strong>Centro de Mozelos</strong>
             </div>
           </Popup>
         </Marker>

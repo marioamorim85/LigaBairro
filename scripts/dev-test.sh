@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# LigaBairro Development Test Script
+# PorPerto Development Test Script
 
 set -e
 
-echo "🧪 Running LigaBairro tests..."
+echo "🧪 Running PorPerto tests..."
 
 # Backend tests
 echo "🔧 Running backend tests..."

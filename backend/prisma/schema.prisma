@@ -16,7 +16,7 @@ model User {
   email             String   @unique
   googleId          String   @unique
   avatarUrl         String?
-  city              String   @default("Fiães")
+  city              String   @default("Mozelos")
   lat               Float?
   lng               Float?
   bio               String?  @db.Text
@@ -75,7 +75,7 @@ model Request {
   status        RequestStatus @default(OPEN) // OPEN, IN_PROGRESS, DONE, CANCELLED
   scheduledFrom DateTime?
   scheduledTo   DateTime?
-  city          String   @default("Fiães")
+  city          String   @default("Mozelos")
   lat           Float
   lng           Float
   applications  Application[]

@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { PrismaService } from '../../src/common/prisma/prisma.service';
 
-describe('LigaBairro E2E', () => {
+describe('PorPerto E2E', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -90,10 +90,10 @@ describe('LigaBairro E2E', () => {
   });
 
   describe('Geographic Validation', () => {
-    it('should validate Fiães location constraints', async () => {
-      // Test that requests outside Fiães area are rejected
+    it('should validate Mozelos location constraints', async () => {
+      // Test that requests outside Mozelos area are rejected
       const invalidLocation = {
-        lat: 41.1579, // Porto coordinates (outside Fiães radius)
+        lat: 41.1579, // Porto coordinates (outside Mozelos radius)
         lng: -8.6291,
       };
 
@@ -101,7 +101,7 @@ describe('LigaBairro E2E', () => {
       const query = `
         mutation {
           createRequest(input: {
-            title: "Test request outside Fiães"
+            title: "Test request outside Mozelos"
             description: "This should fail"
             category: "Testes"
             lat: ${invalidLocation.lat}
@@ -144,47 +144,47 @@ describe('LigaBairro E2E', () => {
 
     it('should have seeded admin user', async () => {
       const adminUser = await prisma.user.findUnique({
-        where: { email: 'admin@ligabairro.local' }
+        where: { email: 'admin@porperto.local' }
       });
       
       expect(adminUser).toBeDefined();
       expect(adminUser?.role).toBe('ADMIN');
-      expect(adminUser?.city).toBe('Fiães');
+      expect(adminUser?.city).toBe('Mozelos');
     });
   });
 
   describe('Business Logic', () => {
-    it('should enforce Fiães-only city constraint', async () => {
+    it('should enforce Mozelos-only city constraint', async () => {
       // Test seed data follows constraints
       const requests = await prisma.request.findMany();
       
       requests.forEach(request => {
-        expect(request.city).toBe('Fiães');
+        expect(request.city).toBe('Mozelos');
       });
     });
 
-    it('should have proper geographic coordinates for Fiães', async () => {
-      const FIAES_CENTER_LAT = 40.9735;
-      const FIAES_CENTER_LNG = -8.5480;
-      const FIAES_RADIUS_KM = 7;
+    it('should have proper geographic coordinates for Mozelos', async () => {
+      const MOZELOS_CENTER_LAT = 40.9735;
+      const MOZELOS_CENTER_LNG = -8.5480;
+      const MOZELOS_RADIUS_KM = 7;
       
       const requests = await prisma.request.findMany();
       
       requests.forEach(request => {
         // Calculate distance using Haversine formula
         const R = 6371; // Earth's radius in km
-        const dLat = (request.lat - FIAES_CENTER_LAT) * Math.PI / 180;
-        const dLng = (request.lng - FIAES_CENTER_LNG) * Math.PI / 180;
+        const dLat = (request.lat - MOZELOS_CENTER_LAT) * Math.PI / 180;
+        const dLng = (request.lng - MOZELOS_CENTER_LNG) * Math.PI / 180;
         
         const a = 
           Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(FIAES_CENTER_LAT * Math.PI / 180) * Math.cos(request.lat * Math.PI / 180) *
+          Math.cos(MOZELOS_CENTER_LAT * Math.PI / 180) * Math.cos(request.lat * Math.PI / 180) *
           Math.sin(dLng / 2) * Math.sin(dLng / 2);
         
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const distance = R * c;
         
-        expect(distance).toBeLessThanOrEqual(FIAES_RADIUS_KM);
+        expect(distance).toBeLessThanOrEqual(MOZELOS_RADIUS_KM);
       });
     });
   });

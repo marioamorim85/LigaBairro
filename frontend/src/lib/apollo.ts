@@ -20,9 +20,14 @@ const authLink = setContext((_, { headers }) => {
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
+      // Don't log authentication errors for public pages
+      if (message === 'Unauthorized') {
+        return;
+      }
+      
       console.warn(`GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`);
       
-      // Send GraphQL errors to Sentry
+      // Send GraphQL errors to Sentry (except auth errors)
       Sentry.withScope((scope) => {
         scope.setTag('errorType', 'GraphQL');
         scope.setContext('GraphQL Error', {

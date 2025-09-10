@@ -111,13 +111,13 @@ export default function RequestsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pb-6 border-b border-gray-200">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Pedidos em Fiães
+            Pedidos em Mozelos
           </h1>
           <p className="text-gray-600 text-lg">Encontra ou oferece ajuda na tua comunidade</p>
           <div className="flex items-center space-x-4 text-sm text-gray-500">
             <span className="flex items-center">
               <MapPin className="w-4 h-4 mr-1" />
-              Fiães, Santa Maria da Feira
+              Mozelos, Santa Maria da Feira
             </span>
             <span>•</span>
             <span>{!loading && `${filteredRequests.length} pedidos ativos`}</span>
@@ -281,7 +281,7 @@ export default function RequestsPage() {
                     <div className="flex items-center justify-between text-sm text-gray-500">
                       <div className="flex items-center">
                         <MapPin className="w-4 h-4 mr-1" />
-                        {request.distance ? `${request.distance.toFixed(1)}km` : 'Fiães'}
+                        {request.distance ? `${request.distance.toFixed(1)}km` : 'Mozelos'}
                       </div>
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />

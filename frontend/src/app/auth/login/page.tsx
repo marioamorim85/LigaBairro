@@ -29,11 +29,15 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-0 bg-white/90 backdrop-blur-sm">
         <CardHeader className="text-center space-y-4 pb-8">
-          <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <div className="text-white font-bold text-2xl">LB</div>
+          <div className="mx-auto w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-gray-200">
+            <img 
+              src="/logo.png" 
+              alt="PorPerto Logo" 
+              className="w-16 h-16 object-contain"
+            />
           </div>
           <CardTitle className="text-3xl font-bold text-gray-900">
-            Bem-vindo ao LigaBairro
+            Bem-vindo ao PorPerto
           </CardTitle>
           <CardDescription className="text-gray-600 text-base">
             Entre com a sua conta Google para continuar

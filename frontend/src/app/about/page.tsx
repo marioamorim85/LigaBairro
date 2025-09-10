@@ -19,7 +19,7 @@ export default function AboutPage() {
               Voltar ao início
             </Link>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Sobre Nós</h1>
-            <p className="text-gray-600 text-lg">Conheça a história e missão da LigaBairro</p>
+            <p className="text-gray-600 text-lg">Conheça a história e missão da PorPerto</p>
           </div>
 
           {/* Content */}
@@ -29,7 +29,7 @@ export default function AboutPage() {
               <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <div className="text-2xl font-bold">LB</div>
               </div>
-              <h2 className="text-2xl font-bold mb-4">Conectando a Comunidade de Fiães</h2>
+              <h2 className="text-2xl font-bold mb-4">Conectando a Comunidade de Mozelos</h2>
               <p className="text-lg opacity-90 max-w-2xl mx-auto">
                 Uma plataforma que fortalece os laços entre vizinhos, promovendo ajuda mútua e construindo uma comunidade mais unida.
               </p>
@@ -43,7 +43,7 @@ export default function AboutPage() {
                   <h3 className="text-xl font-semibold text-gray-900">Nossa Missão</h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  Facilitar a conexão entre vizinhos em Fiães, criando uma rede de apoio onde todos podem contribuir com as suas competências e receber ajuda quando necessário, fortalecendo o espírito de comunidade.
+                  Facilitar a conexão entre vizinhos em Mozelos, criando uma rede de apoio onde todos podem contribuir com as suas competências e receber ajuda quando necessário, fortalecendo o espírito de comunidade.
                 </p>
               </div>
 
@@ -66,13 +66,13 @@ export default function AboutPage() {
               </div>
               <div className="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                  A LigaBairro nasceu da observação de que, mesmo numa era hiperconectada, muitos vizinhos não se conhecem nem se ajudam mutuamente. Em Fiães, como em muitas outras localidades, existem pessoas com diversas competências e disponibilidade para ajudar, mas falta um meio eficaz de as conectar com quem precisa.
+                  A PorPerto nasceu da observação de que, mesmo numa era hiperconectada, muitos vizinhos não se conhecem nem se ajudam mutuamente. Em Mozelos, como em muitas outras localidades, existem pessoas com diversas competências e disponibilidade para ajudar, mas falta um meio eficaz de as conectar com quem precisa.
                 </p>
                 <p>
-                  Em 2025, decidimos criar uma solução digital que fosse simples, segura e focada na comunidade local. A nossa plataforma permite que os residentes de Fiães se conectem de forma natural, oferecendo e solicitando ajuda em diversas áreas, desde pequenas reparações a companhia para idosos.
+                  Em 2025, decidimos criar uma solução digital que fosse simples, segura e focada na comunidade local. A nossa plataforma permite que os residentes de Mozelos se conectem de forma natural, oferecendo e solicitando ajuda em diversas áreas, desde pequenas reparações a companhia para idosos.
                 </p>
                 <p>
-                  Acreditamos que a tecnologia deve servir para aproximar pessoas, não para as distanciar. Por isso, a LigaBairro foi desenhada para facilitar encontros reais e criar relacionamentos genuínos entre vizinhos.
+                  Acreditamos que a tecnologia deve servir para aproximar pessoas, não para as distanciar. Por isso, a PorPerto foi desenhada para facilitar encontros reais e criar relacionamentos genuínos entre vizinhos.
                 </p>
               </div>
             </div>
@@ -152,9 +152,9 @@ export default function AboutPage() {
 
             {/* Community Focus */}
             <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Porquê Fiães?</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Porquê Mozelos?</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                Começámos em Fiães porque acreditamos que as melhores soluções nascem localmente. Esta comunidade tem características únicas que tornam possível criar uma rede de apoio genuína:
+                Começámos em Mozelos porque acreditamos que as melhores soluções nascem localmente. Esta comunidade tem características únicas que tornam possível criar uma rede de apoio genuína:
               </p>
               <ul className="space-y-2 text-gray-700">
                 <li className="flex items-start">
@@ -176,7 +176,7 @@ export default function AboutPage() {
             <div className="bg-white rounded-lg shadow-lg p-8 text-center">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Junte-se à Nossa Comunidade</h2>
               <p className="text-gray-700 leading-relaxed mb-6">
-                Tem sugestões, questões ou quer saber mais sobre a LigaBairro? Estamos sempre disponíveis para conversar com a nossa comunidade.
+                Tem sugestões, questões ou quer saber mais sobre a PorPerto? Estamos sempre disponíveis para conversar com a nossa comunidade.
               </p>
               <Link 
                 href="/contact"

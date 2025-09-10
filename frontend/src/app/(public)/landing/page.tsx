@@ -6,19 +6,21 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { MapPin, Users, Clock, Heart, Sparkles, Zap, Eye, MousePointer, Coffee } from 'lucide-react';
 
 export default function LandingPage() {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_BASE || 'http://localhost:4000';
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-20">
         <div className="text-center">
-          <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl mb-8">
-            <div className="text-white font-bold text-3xl">LB</div>
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="PorPerto Logo" 
+            className="mx-auto h-40 object-contain mb-8 drop-shadow-2xl"
+          />
           
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Ajuda perto de ti em <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Fiães</span>
+            Ajuda perto de ti em <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Mozelos</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             Conectamos vizinhos que precisam de ajuda com pessoas dispostas a ajudar. 
@@ -68,7 +70,7 @@ export default function LandingPage() {
               </div>
               <CardTitle className="text-2xl mb-3">Local</CardTitle>
               <CardDescription className="text-gray-600 leading-relaxed">
-                Focado exclusivamente em Fiães. Ajuda a vizinhos da tua área.
+                Focado exclusivamente em Mozelos. Ajuda a vizinhos da tua área.
               </CardDescription>
             </CardContent>
           </Card>
@@ -160,7 +162,7 @@ export default function LandingPage() {
             Pronto para começar?
           </h2>
           <p className="text-gray-600 mb-10 text-xl max-w-2xl mx-auto leading-relaxed">
-            Junta-te à comunidade LigaBairro e descobre como é fácil ajudar e ser ajudado.
+            Junta-te à comunidade PorPerto e descobre como é fácil ajudar e ser ajudado.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
@@ -205,16 +207,16 @@ export default function LandingPage() {
       <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl mb-6">
-            <div className="text-white font-bold text-xl">LB</div>
+            <div className="text-white font-bold text-xl">PP</div>
           </div>
-          <h3 className="text-2xl font-bold mb-4">LigaBairro</h3>
+          <h3 className="text-2xl font-bold mb-4">PorPerto</h3>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-            Conectando a comunidade de Fiães, uma ajuda de cada vez.
+            Conectando a comunidade de Mozelos, uma ajuda de cada vez.
           </p>
           <div className="flex justify-center space-x-6 text-sm text-gray-400">
             <Link href="/terms" className="hover:text-white transition-colors">Termos de Serviço</Link>
             <Link href="/privacy" className="hover:text-white transition-colors">Política de Privacidade</Link>
-            <span>© 2024 LigaBairro</span>
+            <span>© 2025 PorPerto</span>
           </div>
         </div>
       </footer>

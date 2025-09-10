@@ -249,7 +249,7 @@ export function FullPageLoader({ message }: { message?: string }) {
         />
         
         <p className="text-gray-500 text-sm">
-          Liga Bairro • A comunidade mais unida de Fiães
+          PorPerto • A comunidade mais unida de Mozelos
         </p>
       </div>
     </div>

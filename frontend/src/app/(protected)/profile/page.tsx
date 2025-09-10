@@ -114,7 +114,7 @@ export default function ProfilePage() {
         <GoogleAvatar
           src={user.avatarUrl}
           alt={user.name}
-          fallback={user.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+          fallback={user.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
           className="w-16 h-16"
         />
         <div>
@@ -190,7 +190,7 @@ export default function ProfilePage() {
                   className="bg-gray-50"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Fixa em Fiães para o MVP
+                  Fixa em Mozelos para o MVP
                 </p>
               </div>
 
@@ -290,7 +290,7 @@ export default function ProfilePage() {
               )}
               
               <p className="text-xs text-gray-500 mt-2">
-                A sua localização exata nunca é partilhada. Apenas uma localização aproximada dentro de Fiães.
+                A sua localização exata nunca é partilhada. Apenas uma localização aproximada dentro de Mozelos.
               </p>
             </CardContent>
           </Card>

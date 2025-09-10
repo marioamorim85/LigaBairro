@@ -13,13 +13,13 @@ export class RequestsService {
   ) {}
 
   async create(userId: string, input: CreateRequestInput) {
-    // Validate Fiães location
-    this.geoService.validateFiaesLocation(input.lat, input.lng, 'Fiães');
+    // Validate Mozelos location
+    this.geoService.validateMozelosLocation(input.lat, input.lng, 'Mozelos');
 
     return this.prisma.request.create({
       data: {
         ...input,
-        city: 'Fiães', // Force Fiães for MVP
+        city: 'Mozelos', // Force Mozelos for MVP
         requesterId: userId,
         scheduledFrom: input.scheduledFrom ? new Date(input.scheduledFrom) : null,
         scheduledTo: input.scheduledTo ? new Date(input.scheduledTo) : null,
@@ -42,7 +42,7 @@ export class RequestsService {
     
     // Build where clause
     const where: any = {
-      city: constraints.city, // Force Fiães
+      city: constraints.city, // Force Mozelos
       AND: [
         {
           // Use raw SQL for distance filtering

@@ -53,7 +53,7 @@ export class HealthController {
       const enhancedResult = {
         ...result,
         meta: {
-          service: 'ligabairro-backend',
+          service: 'porperto-backend',
           version: process.env.npm_package_version || '1.0.0',
           timestamp: new Date().toISOString(),
           uptime: process.uptime(),
@@ -79,7 +79,7 @@ export class HealthController {
         status: 'error',
         message: error.message,
         timestamp: new Date().toISOString(),
-        service: 'ligabairro-backend',
+        service: 'porperto-backend',
         checkDuration: duration,
       });
     }
@@ -90,7 +90,7 @@ export class HealthController {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'ligabairro-backend',
+      service: 'porperto-backend',
       version: '1.0.0',
     };
   }
@@ -201,7 +201,7 @@ export class HealthController {
       const applicationCount = await this.prismaService.application.count();
 
       return {
-        service: 'ligabairro-backend',
+        service: 'porperto-backend',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         memory: {
@@ -230,7 +230,7 @@ export class HealthController {
       });
 
       return {
-        service: 'ligabairro-backend',
+        service: 'porperto-backend',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         memory: memUsage,

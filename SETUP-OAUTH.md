@@ -12,7 +12,7 @@
 2. Clica em **Create Credentials** > **OAuth 2.0 Client IDs**
 3. Seleciona **Web application**
 4. Configura:
-   - **Name**: LigaBairro
+   - **Name**: PorPerto
    - **Authorized JavaScript origins**: 
      - `http://localhost:3000` (desenvolvimento)
      - `http://localhost:4000` (backend)

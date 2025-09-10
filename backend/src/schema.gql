@@ -284,6 +284,7 @@ input UpdateRequestInput {
 input UpdateUserInput {
   avatarUrl: String
   bio: String
+  googleId: String
   lat: Float
   lng: Float
   name: String

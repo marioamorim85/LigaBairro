@@ -81,9 +81,9 @@ export default function RequestDetailPage() {
   const { data: canReviewHelperData } = useQuery(CAN_REVIEW, {
     variables: { 
       requestId: requestId, 
-      revieweeId: request?.applications?.find(app => app.status === 'ACCEPTED')?.helper.id || '' 
+      revieweeId: request?.applications?.find((app: any) => app.status === 'ACCEPTED')?.helper.id || '' 
     },
-    skip: !requestId || !request?.applications?.find(app => app.status === 'ACCEPTED') || request?.status !== 'DONE',
+    skip: !requestId || !request?.applications?.find((app: any) => app.status === 'ACCEPTED') || request?.status !== 'DONE',
     fetchPolicy: 'cache-and-network',
   });
 
@@ -100,9 +100,9 @@ export default function RequestDetailPage() {
   const { data: myReviewOfHelperData } = useQuery(GET_MY_REVIEW, {
     variables: { 
       requestId: requestId, 
-      revieweeId: request?.applications?.find(app => app.status === 'ACCEPTED')?.helper.id || '' 
+      revieweeId: request?.applications?.find((app: any) => app.status === 'ACCEPTED')?.helper.id || '' 
     },
-    skip: !requestId || !request?.applications?.find(app => app.status === 'ACCEPTED') || request?.status !== 'DONE' || canReviewHelperData?.canReview !== false,
+    skip: !requestId || !request?.applications?.find((app: any) => app.status === 'ACCEPTED') || request?.status !== 'DONE' || canReviewHelperData?.canReview !== false,
     fetchPolicy: 'cache-and-network',
   });
 
@@ -336,16 +336,17 @@ export default function RequestDetailPage() {
                   type="request"
                   targetId={request.id}
                   targetName={request.title}
-                >
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
-                    title="Denunciar pedido"
-                  >
-                    <Flag className="h-4 w-4" />
-                  </Button>
-                </ReportDialog>
+                  triggerButton={
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
+                      title="Denunciar pedido"
+                    >
+                      <Flag className="h-4 w-4" />
+                    </Button>
+                  }
+                />
               )}
             </div>
             
@@ -425,7 +426,7 @@ export default function RequestDetailPage() {
                 <div className="text-center">
                   <div className="flex items-center justify-center text-gray-600 mb-2">
                     <MapPin className="w-4 h-4 mr-1" />
-                    Fiães
+                    Mozelos
                   </div>
                   <p className="text-sm text-gray-600">Localização</p>
                 </div>
@@ -520,16 +521,17 @@ export default function RequestDetailPage() {
                               type="user"
                               targetId={application.helper.id}
                               targetName={application.helper.name}
-                            >
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
-                                title="Denunciar utilizador"
-                              >
-                                <Flag className="h-3 w-3" />
-                              </Button>
-                            </ReportDialog>
+                              triggerButton={
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                                  title="Denunciar utilizador"
+                                >
+                                  <Flag className="h-3 w-3" />
+                                </Button>
+                              }
+                            />
                           </div>
                           {application.helper.ratingAvg > 0 && (
                             <p className="text-sm text-yellow-600">
@@ -627,16 +629,17 @@ export default function RequestDetailPage() {
                         type="user"
                         targetId={request.requester.id}
                         targetName={request.requester.name}
-                      >
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-auto p-1 text-gray-500 hover:text-red-600 text-xs"
-                        >
-                          <Flag className="w-3 h-3 mr-1" />
-                          Denunciar
-                        </Button>
-                      </ReportDialog>
+                        triggerButton={
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-auto p-1 text-gray-500 hover:text-red-600 text-xs"
+                          >
+                            <Flag className="w-3 h-3 mr-1" />
+                            Denunciar
+                          </Button>
+                        }
+                      />
                     )}
                   </div>
                 </div>
@@ -744,16 +747,17 @@ export default function RequestDetailPage() {
                               type="user"
                               targetId={acceptedApplication.helper.id}
                               targetName={acceptedApplication.helper.name}
-                            >
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
-                                title="Denunciar utilizador"
-                              >
-                                <Flag className="h-3 w-3" />
-                              </Button>
-                            </ReportDialog>
+                              triggerButton={
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                                  title="Denunciar utilizador"
+                                >
+                                  <Flag className="h-3 w-3" />
+                                </Button>
+                              }
+                            />
                           )}
                         </div>
                       </div>

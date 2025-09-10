@@ -30,7 +30,7 @@ export default function PrivacyPage() {
                 <h2 className="text-2xl font-semibold text-gray-900">Compromisso com a Privacidade</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                A LigaBairro está comprometida em proteger a sua privacidade e os seus dados pessoais. Esta política explica como recolhemos, utilizamos, armazenamos e protegemos as suas informações quando utiliza a nossa plataforma.
+                A PorPerto está comprometida em proteger a sua privacidade e os seus dados pessoais. Esta política explica como recolhemos, utilizamos, armazenamos e protegemos as suas informações quando utiliza a nossa plataforma.
               </p>
             </section>
 
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Informações de Localização</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1 ml-4">
-                    <li>Localização aproximada dentro de Fiães (para melhor correspondência de serviços)</li>
+                    <li>Localização aproximada dentro de Mozelos (para melhor correspondência de serviços)</li>
                     <li>Nunca partilhamos a sua localização exata</li>
                   </ul>
                 </div>
@@ -104,13 +104,13 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Partilha de Informações</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
-                A LigaBairro não vende os seus dados pessoais. Podemos partilhar informações limitadas nos seguintes casos:
+                A PorPerto não vende os seus dados pessoais. Podemos partilhar informações limitadas nos seguintes casos:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
                 <li><strong>Entre utilizadores:</strong> Informações de perfil básicas são visíveis para outros membros da comunidade</li>
                 <li><strong>Prestadores de serviços:</strong> Parceiros técnicos que nos ajudam a operar a plataforma</li>
                 <li><strong>Requisitos legais:</strong> Quando obrigatório por lei ou ordem judicial</li>
-                <li><strong>Proteção de direitos:</strong> Para proteger os direitos, propriedade ou segurança da LigaBairro e utilizadores</li>
+                <li><strong>Proteção de direitos:</strong> Para proteger os direitos, propriedade ou segurança da PorPerto e utilizadores</li>
               </ul>
             </section>
 

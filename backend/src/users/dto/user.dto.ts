@@ -83,6 +83,11 @@ export class UpdateUserInput {
   @IsNumber({}, { message: 'Longitude deve ser um número' })
   @IsLongitude({ message: 'Longitude deve ser válida' })
   lng?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  googleId?: string;
 }
 
 @InputType()

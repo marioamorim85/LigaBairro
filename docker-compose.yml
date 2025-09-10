@@ -3,11 +3,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: ligabairro-postgres
+    container_name: porperto-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: ligabairro
+      POSTGRES_DB: porperto
     ports:
       - "5432:5432"
     volumes:

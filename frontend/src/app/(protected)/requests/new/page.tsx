@@ -141,7 +141,7 @@ export default function NewRequestPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Criar Novo Pedido</h1>
-          <p className="text-gray-600">Descreve a ajuda que precisas em Fiães</p>
+          <p className="text-gray-600">Descreve a ajuda que precisas em Mozelos</p>
         </div>
       </div>
 
@@ -357,7 +357,7 @@ export default function NewRequestPage() {
                 Localização *
               </CardTitle>
               <p className="text-sm text-gray-600">
-                Seleciona onde precisas de ajuda (apenas dentro de Fiães)
+                Seleciona onde precisas de ajuda (apenas dentro de Mozelos)
               </p>
             </CardHeader>
             <CardContent>
@@ -367,7 +367,7 @@ export default function NewRequestPage() {
                 </p>
                 <ul className="text-xs text-blue-700 mt-1 ml-6">
                   <li>• Clica no mapa dentro do círculo azul</li>
-                  <li>• Só são aceites localizações em Fiães</li>
+                  <li>• Só são aceites localizações em Mozelos</li>
                   <li>• Aparece um marcador na localização selecionada</li>
                 </ul>
               </div>
